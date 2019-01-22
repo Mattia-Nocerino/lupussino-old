@@ -1,5 +1,14 @@
-extends layout
+doctype html
+html
+  head
+    title Lupussino online!
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div#app
+      input#player(v-model="player", type="text", required="true", placeholder="Tuo nickname...")
+      input#room(v-model="room", type="text", required="true", placeholder="Nome stanza...")
+      button(@click="enter") Entra!
 
-block content
-  h1= title
-  p Welcome to #{title}
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
+  script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
+  script(src='/javascripts/main.js')
