@@ -11,7 +11,7 @@ var room;
 var player;
 var player_in_room = [];
 
-var configurazioni = [
+const configurazioni = [
     null, //0
     null, //1
     null, //2
@@ -63,8 +63,9 @@ io.on('connection', function(socket){
     socket.on('game', function(data, callback){
         //carico la configurazione in base al numero di giocatori nella stanza
         player_in_room = player_list.filter(c => c.room === data.room);
-        if (player_in_room >= 3) { 
-            configurazione_attiva = configurazioni[player_in_room.length];
+        if (player_in_room.length >= 3) {
+            console.log(configurazioni);
+            configurazione_attiva = configurazioni[player_in_room.length].slice();
             //assegno i ruoli
             //loopo i giocatori e assegno il ruolo
             for(var player of player_in_room){
@@ -113,8 +114,8 @@ io.on('connection', function(socket){
                         break;
                     case "assassino":
                         for(var a of player_in_room){
-                            if (a.role == 'assassino' && t.name != player.name){
-                                altro_assassino = t.name;
+                            if (a.role == 'assassino' && a.name != player.name){
+                                altro_assassino = a.name;
                             }
                         }
                         
@@ -130,7 +131,7 @@ io.on('connection', function(socket){
 
             
             console.log(player_in_room);
-            console.log(esiliate);
+            // console.log(esiliate);
             //rispondo ai client
         }
     });
