@@ -17,22 +17,22 @@ io.on('connection', function(socket){
         console.log('user disconnected');
     });
 
-    socket.on('enter', function(room_name, player_name){        
-        room = room_list.find(r => r.name == room_name);
+    socket.on('enter', function(data, callback){        
+        room = room_list.find(r => r.name == data.room);
 
         if (room == undefined){
             console.log("Creo la stanza");
-            room = new Room(room_name);
+            room = new Room(data.room);
             room_list.push(room);
-            player = new Player(player_name, socket.id, room_name, true);
+            player = new Player(data.player, socket.id, data.room, true);
         } else {
             console.log("Mi unisco alla stanza");
-            player = room.player_list.find(p => p.name == player_name);
+            player = room.player_list.find(p => p.name == data.player);
             if (player == undefined){
-                player = new Player(player_name, socket.id, room_name, false);
+                player = new Player(data.player, socket.id, data.room, false);
             } else {
                 console.log("Giocatore già presente nella stanza");
-                socket.emit('enter_error', {enter_error: true});
+                callback(true);
                 return;
             }
         }
@@ -40,11 +40,7 @@ io.on('connection', function(socket){
         player_list.push(player);
         room.playerJoin(player);
         socket.join(room.name);
-
-        console.log(room_list);
-        console.log(player_list);
-        // room.playerJoin(player);
-        // socket.join(room.name);
+        callback(false);
     });
 });
 

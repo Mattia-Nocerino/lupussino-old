@@ -10,7 +10,13 @@ var vm = new Vue({
     methods: {
         enter: function(){
             if(room.value!='' || player.value!=''){
-                socket.emit('enter', room.value, player.value)
+                socket.emit('enter', vm.$data, function(error){
+                    if (error){
+                        vm.$data.enter_error = true;
+                    } else {
+                        vm.$data.enter_error = false;
+                    }
+                });
             }else{
                 alert('Inserisci un nome per la stanza e/o un nickname')
             }
