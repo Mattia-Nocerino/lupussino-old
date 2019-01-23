@@ -13,8 +13,8 @@ html
 
       div#role-cnt(v-show="in_room")
         button(v-show="is_owner", @click="game") Nuova partita
-        span#role {{ role }}
-        span#detail {{detail}}
+        div#role {{ role }}
+        div#detail {{detail}}
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')

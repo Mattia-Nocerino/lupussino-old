@@ -5,7 +5,7 @@ var vm = new Vue({
     data: {
         room: '',
         player: '',
-        role: '',
+        role: 'In attesa che il boss appizzi la partita...',
         detail: '',
         is_owner: false,
         in_room: false,
