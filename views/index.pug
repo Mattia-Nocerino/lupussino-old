@@ -9,6 +9,8 @@ html
       input#room(v-model="room", type="text", required="true", placeholder="Stanza...")
       button(@click="enter") Entra!
       span(v-show="enter_error") Nickname già utilizzato!
+      
+      button(v-show="is_owner", @click="game") Nuova partita
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')

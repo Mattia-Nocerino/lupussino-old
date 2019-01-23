@@ -4,6 +4,7 @@ class Player {
         this.id = id;
         this.room = room;
         this.is_owner = is_owner;
+        this.role = '';
     }
 }
 
