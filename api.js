@@ -7,6 +7,7 @@ api.io = io;
 
 var room_list = [];
 var player_list = [];
+
 var room;
 var player;
 var player_in_room = [];
@@ -44,7 +45,7 @@ io.on('connection', function(socket){
             player = new Player(data.player, socket.id, data.room, true);
         } else {
             console.log("Mi unisco alla stanza");
-            player = room.player_list.find(p => p.name == data.player);
+            player = player_list.find(p => p.name == data.player && p.room == data.room);
             if (player == undefined){
                 player = new Player(data.player, socket.id, data.room, false);
             } else {
@@ -55,7 +56,6 @@ io.on('connection', function(socket){
         }
 
         player_list.push(player);
-        room.playerJoin(player);
         socket.join(room.name);
         callback(false, {is_owner: player.is_owner});
     });
