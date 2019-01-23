@@ -5,14 +5,14 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div#app
-      input#player(v-model="player", type="text", required="true", placeholder="Nickname...")
-      input#room(v-model="room", type="text", required="true", placeholder="Stanza...")
-      button(@click="enter") Entra!
-      span(v-show="enter_error") Nickname già utilizzato!
-      
-      button(v-show="is_owner", @click="game") Nuova partita
+      div#input-cnt(v-show="!(in_room)")
+        input#player(v-model="player", type="text", required="true", placeholder="Nickname...")
+        input#room(v-model="room", type="text", required="true", placeholder="Stanza...")
+        button(@click="enter") Entra!
+        span(v-show="enter_error") Nickname già utilizzato!
 
-      div#role-cnt
+      div#role-cnt(v-show="in_room")
+        button(v-show="is_owner", @click="game") Nuova partita
         span#role {{ role }}
         span#detail {{detail}}
 
