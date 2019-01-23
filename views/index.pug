@@ -12,6 +12,10 @@ html
       
       button(v-show="is_owner", @click="game") Nuova partita
 
+      div#role-cnt
+        span#role {{ role }}
+        span#detail {{detail}}
+
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
   script(src='/javascripts/main.js')

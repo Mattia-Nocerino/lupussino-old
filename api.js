@@ -25,6 +25,7 @@ var configurazioni = [
     null  //10
 ];
 var configurazione_attiva = [];
+var esiliate = [];
 
 io.on('connection', function(socket){
     console.log('A user connected');
@@ -64,8 +65,71 @@ io.on('connection', function(socket){
         player_in_room = player_list.filter(c => c.room === data.room);
         configurazione_attiva = configurazioni[player_in_room.length];
         //assegno i ruoli
+        //loopo i giocatori e assegno il ruolo
+        for(var player of player_in_room){
+            var random_item = Math.floor(Math.random() * configurazione_attiva.length);
+            player.role = configurazione_attiva[random_item];
+            configurazione_attiva.splice(random_item, 1);
+        }
+        var esiliate = configurazione_attiva;
+
+        for(var player of player_in_room){
+            var altro_testimone = '';
+            var altro_assassino = '';
+            switch(player.role){
+                case "cittadino":
+                    detail = "Sei un semplice cittadino in una città piena di assassini... guardati le spalle";
+                    break;
+                case "investigatore":
+                    detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
+                    break;
+                case "investigatrice":
+                    detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
+                    break;
+                case "testimone":
+                    for(var t of player_in_room){
+                        if (t.role == 'testimone' && t.name != player.name){
+                            altro_testimone = t.name;
+                        }
+                    }
+                    
+                    if (altro_testimone == ''){
+                        detail = "Sei testimone... ma da solo";
+                    } else {
+                        if (player_in_room.length > 5){
+                            detail = "Sei testimone con " + altro_testimone;
+                        } else {
+                            detail = "Sei testimone e NON da solo!";
+                        }
+                    }
+                    break;
+                case "mitomane":
+                    if (player_in_room.length > 5){
+                        detail = "Sei il mitomane e gli assassini sono ";
+                    } else {
+                        detail = "Mitomane, fatti votare (bastardo!)";
+                    }
+                    break;
+                case "assassino":
+                    for(var a of player_in_room){
+                        if (a.role == 'assassino' && t.name != player.name){
+                            altro_assassino = t.name;
+                        }
+                    }
+                    
+                    if (altro_assassino == ''){
+                        detail = "Sei un'assassino... ma da solo";
+                    } else {
+                        detail = "Sei assassino con " + altro_assassino;
+                    }
+                    break;
+            }
+            io.to(`${player.id}`).emit('role', {role: player.role, detail: detail});
+        }
+
         
-        
+        console.log(player_in_room);
+        console.log(esiliate);
         //rispondo ai client
     });
 });

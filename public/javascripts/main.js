@@ -5,6 +5,8 @@ var vm = new Vue({
     data: {
         room: '',
         player: '',
+        role: '',
+        detail: '',
         is_owner: false,
         in_room: false,
         enter_error: false
@@ -14,12 +16,12 @@ var vm = new Vue({
             if(room.value!='' || player.value!=''){
                 socket.emit('enter', vm.$data, function(error, message){
                     if (error){
-                        vm.$data.enter_error = true;
-                        vm.$data.in_room = false;
+                        vm.$data.enter_error = true
+                        vm.$data.in_room = false
                     } else {
-                        vm.$data.enter_error = false;
-                        vm.$data.in_room = true;
-                        vm.$data.is_owner = message.is_owner;
+                        vm.$data.enter_error = false
+                        vm.$data.in_room = true
+                        vm.$data.is_owner = message.is_owner
                     }
                 });
             }else{
@@ -27,9 +29,14 @@ var vm = new Vue({
             }
         },
         game: function(){
-            socket.emit('game', vm.$data, function(error, message){
-
-            });
+            socket.emit('game', vm.$data);
         }
     }
+})
+
+socket.on('role', function(message) {
+    console.log('Ti è stato assegnato il ruolo: ' + message)
+
+    vm.$data.role = message.role;
+    vm.$data.detail = message.detail;
 })
