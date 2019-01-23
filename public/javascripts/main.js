@@ -4,7 +4,8 @@ var vm = new Vue({
     el: '#app',
     data: {
         room: '',
-        player: ''
+        player: '',
+        enter_error: false
     },
     methods: {
         enter: function(){

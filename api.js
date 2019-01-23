@@ -6,6 +6,9 @@ var api = {};
 api.io = io;
 
 var room_list = [];
+var player_list = [];
+var room;
+var player;
 
 io.on('connection', function(socket){
     console.log('A user connected');
@@ -14,34 +17,34 @@ io.on('connection', function(socket){
         console.log('user disconnected');
     });
 
-    socket.on('enter', function(room_name, player_name){
-        //TODO: translate pseudocode
-        var is_owner = false;
-        var room;
-        var player;
+    socket.on('enter', function(room_name, player_name){        
+        room = room_list.find(r => r.name == room_name);
 
-        if (!room_exists){
+        if (room == undefined){
+            console.log("Creo la stanza");
             room = new Room(room_name);
             room_list.push(room);
-            is_owner = true;
+            player = new Player(player_name, socket.id, room_name, true);
         } else {
-            //get room from room_list 
-            room = room_list[];
-        }
-        
-        if (!player_exists_in_room){
-            var player = new Player(player_name, is_owner);
-        } else {
-            //giocatore già esistente!!! dio maialone
-            return err;
+            console.log("Mi unisco alla stanza");
+            player = room.player_list.find(p => p.name == player_name);
+            if (player == undefined){
+                player = new Player(player_name, socket.id, room_name, false);
+            } else {
+                console.log("Giocatore già presente nella stanza");
+                socket.emit('enter_error', {enter_error: true});
+                return;
+            }
         }
 
-        //player entra finalmente nella stanza
+        player_list.push(player);
         room.playerJoin(player);
-        
-        console.log(room_list);
-        console.log(room.player_list);
         socket.join(room.name);
+
+        console.log(room_list);
+        console.log(player_list);
+        // room.playerJoin(player);
+        // socket.join(room.name);
     });
 });
 
