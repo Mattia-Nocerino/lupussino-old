@@ -6,11 +6,6 @@ var api = {};
 api.io = io;
 
 var room_list = [];
-var player_list = [];
-
-var room;
-var player;
-var player_in_room = [];
 
 const configurazioni = [
     null, //0
@@ -25,8 +20,6 @@ const configurazioni = [
     null, //9
     null  //10
 ];
-var configurazione_attiva = [];
-var esiliate = [];
 
 io.on('connection', function(socket){
     console.log('A user connected');

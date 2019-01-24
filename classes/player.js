@@ -1,9 +1,9 @@
 class Player {
-    constructor(name, id, room, is_owner = false){
-        this.name = name;
+    constructor(id, name, room, is_owner = false){
         this.id = id;
-        this.room = room;
+        this.name = name;
         this.is_owner = is_owner;
+        this.is_online = false;
         this.role = '';
     }
 }
