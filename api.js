@@ -41,7 +41,7 @@ io.on('connection', function(socket){
     socket.on('enter', function(data, callback){
         var new_room = room_list.find(x => x.name == data.room.name);
         var new_player = new Player(socket.id, data.player.name);
-        var login_error = false;
+        var player_name_already_in_use = false;
 
         if (new_room == undefined){//creazione stanza
             new_room = new Room(data.room.name);
@@ -50,12 +50,17 @@ io.on('connection', function(socket){
         }
 
         if (new_player.joinRoom(new_room) == -1){
-            login_error = true;
+            player_name_already_in_use = true;
         } else {
             socket.join(new_room.name);
             io.to(new_room.name).emit('update', {room: room});
         }
-        callback({login_error});
+        
+        callback({
+            errors: {
+                player_name_already_in_use: true
+            }
+        });
     });
 
 //     socket.on('game', function(data, callback){

@@ -7,30 +7,27 @@ var vm = new Vue({
             id: '',
             name: '',
             is_owner: false,
-            is_online: true,
+            is_online: false,
             role: ''
         },
         room: {
             name: '',
             player_list: []
         },
-        login_error = false
+        errors: {
+            player_name_already_in_use: false,
+            missing_login_data: false
+        }
     },
     methods: {
         enter: function(){
-            if(room.value!='' || player.value!=''){
-                socket.emit('enter', vm.$data, function(error){
-                    if (error){
-                        vm.$data.enter_error = true
-                        vm.$data.in_room = false
-                    } else {
-                        vm.$data.enter_error = false
-                        vm.$data.in_room = true
-                        vm.$data.is_owner = message.is_owner
-                    }
+            if(room.name!='' && player.name!=''){
+                vm.$data.errors.missing_login_data = false;
+                socket.emit('enter', vm.$data, function(data){
+                    vm.$data.errors.player_name_already_in_use = data.error.player_name_already_in_use;
                 });
             }else{
-                alert('Inserisci un nome per la stanza e/o un nickname')
+                vm.$data.errors.missing_login_data = true;
             }
         }
         // game: function(){
