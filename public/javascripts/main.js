@@ -1,20 +1,25 @@
-var socket = io();
+var socket = io()
 
 var vm = new Vue({
     el: '#app',
     data: {
-        room: '',
-        player: '',
-        role: 'In attesa che il boss appizzi la partita...',
-        detail: '',
-        is_owner: false,
-        in_room: false,
-        enter_error: false
+        player: {
+            id: '',
+            name: '',
+            is_owner: false,
+            is_online: true,
+            role: ''
+        },
+        room: {
+            name: '',
+            player_list: []
+        },
+        login_error = false
     },
     methods: {
         enter: function(){
             if(room.value!='' || player.value!=''){
-                socket.emit('enter', vm.$data, function(error, message){
+                socket.emit('enter', vm.$data, function(error){
                     if (error){
                         vm.$data.enter_error = true
                         vm.$data.in_room = false
@@ -27,16 +32,28 @@ var vm = new Vue({
             }else{
                 alert('Inserisci un nome per la stanza e/o un nickname')
             }
-        },
-        game: function(){
-            socket.emit('game', vm.$data);
         }
+        // game: function(){
+        //     socket.emit('game', vm.$data);
+        // }
     }
 })
 
-socket.on('role', function(message) {
-    console.log('Ti è stato assegnato il ruolo: ' + message)
+socket.on('connect', function() {
+    vm.$data.player.id = socket.id;
+});
 
-    vm.$data.role = message.role;
-    vm.$data.detail = message.detail;
-})
+socket.on('welcome', function(message) {
+    console.log(message);
+});
+
+//     vm.$data.role = message.role;
+//     vm.$data.detail = message.detail;
+// })
+
+// socket.on('role', function(message) {
+//     console.log('Ti è stato assegnato il ruolo: ' + message)
+
+//     vm.$data.role = message.role;
+//     vm.$data.detail = message.detail;
+// })

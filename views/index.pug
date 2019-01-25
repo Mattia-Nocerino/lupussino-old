@@ -6,16 +6,16 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div#app
-      div#input-cnt(v-show="!(in_room)")
-        input#player(v-model="player", type="text", required="true", placeholder="Nickname...")
-        input#room(v-model="room", type="text", required="true", placeholder="Stanza...")
-        button(@click="enter") Entra!
-        span(v-show="enter_error") Nickname già utilizzato!
+      //- div#input-cnt(v-show="!(in_room)")
+      //-   input#player(v-model="player", type="text", required="true", placeholder="Nickname...")
+      //-   input#room(v-model="room", type="text", required="true", placeholder="Stanza...")
+      //-   button(@click="enter") Entra!
+      //-   span(v-show="enter_error") Nickname già utilizzato!
 
-      div#role-cnt(v-show="in_room")
-        button(v-show="is_owner", @click="game") Nuova partita
-        div#role {{ role }}
-        div#detail {{detail}}
+      //- div#role-cnt(v-show="in_room")
+      //-   button(v-show="is_owner", @click="game") Nuova partita
+      //-   div#role {{ role }}
+      //-   div#detail {{detail}}
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
