@@ -1,5 +1,13 @@
 class Role {
-    constructor(id, name, room, is_owner = false){
+    constructor(name, is_good){
+        this.name = name;
+        this.is_good = is_good;
+    }
+}
+
+class Assassino extends Role {
+    constructor(){
+        super("assassino", false);
     }
 }
 
