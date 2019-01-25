@@ -28,28 +28,36 @@ io.on('connection', function(socket){
         console.log('user disconnected');
     });
 
-    socket.on('enter', function(data, callback){        
-        room = room_list.find(r => r.name == data.room);
+    socket.on('enter', function(data, callback){
+        var new_room = room_list.find(r => r.name == data.room);
+        var new_player = new Player(data.player.name);
 
-        if (room == undefined){
-            console.log("Creo la stanza");
-            room = new Room(data.room);
-            room_list.push(room);
-            player = new Player(data.player, socket.id, data.room, true);
-        } else {
-            console.log("Mi unisco alla stanza");
-            player = player_list.find(p => p.name == data.player && p.room == data.room);
-            if (player == undefined){
-                player = new Player(data.player, socket.id, data.room, false);
-            } else {
-                console.log("Giocatore già presente nella stanza");
-                callback(true, {is_owner: false});
-                return;
-            }
+        if (new_room == undefined){//creazione stanza         
+            new_room = new Room(data.room);
+            room_list.push(new_room);
+            new_player.owner = true;
         }
 
-        player_list.push(player);
-        socket.join(room.name);
+        if (room.playerJoin(new_player)){
+            //inserimento con successo, controllare anche se è online o meno...
+        } else {
+            //giocatore già esistente e online, sei un coglioncello!
+        }
+        
+
+
+        //     player = player_list.find(p => p.name == data.player && p.room == data.room);
+        //     if (player == undefined){
+        //         player = new Player(data.player, socket.id, data.room, false);
+        //     } else {
+        //         console.log("Giocatore già presente nella stanza");
+        //         callback(true, {is_owner: false});
+        //         return;
+        //     }
+        // }
+
+        // player_list.push(player);
+        // socket.join(room.name);
         callback(false, {is_owner: player.is_owner});
     });
 

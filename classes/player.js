@@ -3,7 +3,7 @@ class Player {
         this.id = id;
         this.name = name;
         this.is_owner = is_owner;
-        this.is_online = false;
+        this.is_online = true;
         this.role = '';
     }
 }
