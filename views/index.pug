@@ -6,6 +6,8 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div#app
+
+      //-FORM INIZIALE
       div#input-cnt(v-show="!(player.is_online)")
         input#player(v-model="player.name", type="text", required="true", placeholder="Nickname..." )
 
@@ -19,10 +21,14 @@ html
         span(v-show="errors.player_name_already_in_use") Nickname già utilizzato!
         span(v-show="errors.missing_login_data") Inserisci un nickname e una stanza!
 
-      //- div#role-cnt(v-show="in_room")
-      //-   button(v-show="is_owner", @click="game") Nuova partita
-      //-   div#role {{ role }}
-      //-   div#detail {{detail}}
+
+      //-GIOCO
+      div#role-cnt(v-show="player.is_online")
+        div#new_game(v-show="player.is_owner", class="btn") Nuova partita!
+
+        div#role {{player.role}}
+
+        //-div#detail {{detail}}
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')

@@ -56,7 +56,7 @@ html, body {
   padding: 5%;
 }
 
-input#player, input#room, div#enter {
+#player, #room, #enter {
   display: block;
   margin: 20px 0;
   padding: 10px;
@@ -67,12 +67,12 @@ input#player, input#room, div#enter {
   display: none;
 }
 
-#role-cnt button {
+#new_game {
   position: absolute;
   bottom: 50px;
   left: 50%;
   transform: translate(-50%, 0);
-  padding: 30px;
+  width: 90%;
 }
 
 #role {
