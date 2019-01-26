@@ -6,16 +6,34 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div#app
-      div#input-cnt(v-show="!(in_room)")
-        input#player(v-model="player", type="text", required="true", placeholder="Nickname...")
-        input#room(v-model="room", type="text", required="true", placeholder="Stanza...")
-        button(@click="enter") Entra!
-        span(v-show="enter_error") Nickname già utilizzato!
 
-      div#role-cnt(v-show="in_room")
-        button(v-show="is_owner", @click="game") Nuova partita
+      //-FORM INIZIALE
+      div#input-cnt(v-show="!(player.is_online)")
+        input#player(v-model="player.name", type="text", required="true", placeholder="Nickname..." )
+
+        input#room(v-model="room.name", type="text", required="true", placeholder="Stanza..." list="room_list")
+
+        datalist#room_list
+          room(v-for="room in room_list" v-bind:name="room.name" v-bind:players="room.player_list.filter(x => x.is_online).length" v-bind:key="room.id")
+
+        div#enter(@click="enter", class="btn") Entra!
+
+        span(v-show="errors.player_name_already_in_use") Nickname già utilizzato!
+        span(v-show="errors.missing_login_data") Inserisci un nickname e una stanza!
+
+
+      //-GIOCO
+      div#role-cnt(v-show="player.is_online")
+        div#new-game(@click="game", v-show="player.is_owner", class="btn") Nuova partita!
+
+        //-div#role {{player.role.name}}
         div#role {{ role }}
         div#detail {{detail}}
+        span(v-show="errors.invalid_player_number") Impossibile iniziare la partita, numero di giocatori non valido!
+
+        div#player-list
+          player(v-for="player in room.player_list" v-bind:name="player.name" v-bind:status="player.is_online" v-bind:key="player.id")
+        //-div#detail {{detail}}
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')

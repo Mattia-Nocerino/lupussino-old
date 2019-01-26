@@ -10,6 +10,43 @@ html, body {
   width: 100%;
 }
 
+.btn {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  box-shadow: 0 3px #999;
+  color: white;
+  font-weight: bold;
+}
+
+.btn:hover {background-color: #3e8e41}
+
+.btn:active {
+  background-color: #3e8e41;
+  box-shadow: 0 1px #666;
+  transform: translateY(2px);
+}
+
+.status {
+  border-radius: 100%;
+  margin-right: 5px;
+  padding: 0;
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  line-height: 5px;
+}
+
+.status.online {
+  background-color: #4CAF50;
+  color: #4CAF50;
+}
+
+.status.offline {
+  background-color: #dc0001;
+  color: #dc0001;
+}
+
 #app {
   display: table;
   text-align: center;
@@ -24,19 +61,35 @@ html, body {
   padding: 5%;
 }
 
-#input-cnt * {
+#player, #room, #enter {
   display: block;
   margin: 20px 0;
   padding: 10px;
   width: 100%;
 }
 
-#role-cnt button {
+#room_list {
+  display: none;
+}
+
+#new-game {
   position: absolute;
   bottom: 50px;
   left: 50%;
   transform: translate(-50%, 0);
-  padding: 30px;
+  width: 90%;
+}
+
+#player-list {
+  position: absolute;
+  top: 5px;
+  left: 5%;
+  text-align: left !important;
+}
+
+.player {
+  font-size: 10px;
+  margin-bottom: 5px;
 }
 
 #role {

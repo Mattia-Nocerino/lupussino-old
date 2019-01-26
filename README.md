@@ -1,2 +1,2 @@
-# lupussino
-Rivistazione del gioco lupussino online!
+# lupussino clean-code
+Pulizia codice lato server, suddivisione in classi
