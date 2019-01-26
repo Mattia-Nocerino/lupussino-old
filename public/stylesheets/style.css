@@ -27,8 +27,19 @@ html, body {
   transform: translateY(2px);
 }
 
-.error {
-  border-color: red;
+.status {
+  padding: 5px;
+  border-radius: 100%;
+}
+
+.status.online {
+  background-color: #4CAF50;
+  color: #4CAF50;
+}
+
+.status.offline {
+  background-color: #dc0001;
+  color: #dc0001;
 }
 
 #app {

@@ -22,7 +22,6 @@ const configurazioni = [
 ];
 
 io.on('connection', function(socket){
-    console.log('A user connected: ' + socket.id);
     socket.emit('room_list', {room_list: room_list});
 
     socket.on('disconnect', function(){
@@ -33,7 +32,6 @@ io.on('connection', function(socket){
                 leaving_player.leaveRoom(room);
                 io.to(room.name).emit('update', {room: room});
             }
-            console.log(room);
             socket.leave(room.name);
         });
     });
@@ -47,8 +45,6 @@ io.on('connection', function(socket){
             new_room = new Room(data.room.name);
             room_list.push(new_room);
             new_player.is_owner = true;
-
-            io.emit('room_list', {room_list: room_list});
         }
 
         if (new_player.joinRoom(new_room) == -1){
@@ -58,7 +54,9 @@ io.on('connection', function(socket){
             socket.join(new_room.name);
             io.to(new_room.name).emit('update', {room: new_room});
         }
-        
+
+        io.emit('room_list', {room_list: room_list});
+
         callback({
             player: new_player,
             errors: {

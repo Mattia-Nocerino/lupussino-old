@@ -4,8 +4,8 @@ var socket = io()
 Vue.component('room', {
     props: ['name', 'players'],
     template: '<option :value="name">' + 
-                '<span players_online>' +
-                    '<span class="room_status"></span> {{players}}' +
+                '<span class="players_online" v-bind:class="[(players > 0) ? \'online\' : \'offline\']">' +
+                    '{{players}} online' +
                 '</span>' +
               '</option>'
 })
@@ -58,6 +58,10 @@ socket.on('welcome', function(message) {
 
 socket.on('room_list', function(data) {
     vm.$data.room_list = data.room_list;
+});
+
+socket.on('update', function(data) {
+    vm.$data.room = data.room;
 });
 
 //     vm.$data.role = message.role;
