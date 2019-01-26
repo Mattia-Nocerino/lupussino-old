@@ -15,13 +15,13 @@ class Room {
         return this.player_list.find(x => x.is_owner == true);
     }
 
-    assignRoles() {
-        
-    }
+    // assignRoles() {
 
-    gameStart() {
-        this.assignRoles();
-    }
+    // }
+
+    // gameStart() {
+    //     this.assignRoles();
+    // }
 }
 
 module.exports = Room;

@@ -24,9 +24,11 @@ html
 
       //-GIOCO
       div#role-cnt(v-show="player.is_online")
-        div#new-game(@click="new_game", v-show="player.is_owner", class="btn") Nuova partita!
+        div#new-game(@click="game", v-show="player.is_owner", class="btn") Nuova partita!
 
-        div#role {{player.role.name}}
+        //-div#role {{player.role.name}}
+        div#role {{ role }}
+        div#detail {{detail}}
         span(v-show="errors.invalid_player_number") Impossibile iniziare la partita, numero di giocatori non valido!
 
         div#player-list
