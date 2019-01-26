@@ -6,7 +6,6 @@ var api = {};
 api.io = io;
 
 var room_list = [];
-var room_list2 = [];
 
 const configurazioni = [
     null, //0
@@ -24,6 +23,7 @@ const configurazioni = [
 
 io.on('connection', function(socket){
     console.log('A user connected: ' + socket.id);
+    socket.emit('room_list', {room_list: room_list});
 
     socket.on('disconnect', function(){
         var leaving_player;
@@ -47,18 +47,22 @@ io.on('connection', function(socket){
             new_room = new Room(data.room.name);
             room_list.push(new_room);
             new_player.is_owner = true;
+
+            io.emit('room_list', {room_list: room_list});
         }
 
         if (new_player.joinRoom(new_room) == -1){
             player_name_already_in_use = true;
+            new_player.is_online = false;
         } else {
             socket.join(new_room.name);
-            io.to(new_room.name).emit('update', {room: room});
+            io.to(new_room.name).emit('update', {room: new_room});
         }
         
         callback({
+            player: new_player,
             errors: {
-                player_name_already_in_use: true
+                player_name_already_in_use: player_name_already_in_use
             }
         });
     });

@@ -5,7 +5,7 @@ class Room {
     }
 
     get player_number() {
-        return this.player_list.length;
+        return this.player_list.filter(x => x.is_online).length
     }
 
     get owner() {

@@ -1,8 +1,19 @@
 var socket = io()
 
+
+Vue.component('room', {
+    props: ['name', 'players'],
+    template: '<option :value="name">' + 
+                '<span players_online>' +
+                    '<span class="room_status"></span> {{players}}' +
+                '</span>' +
+              '</option>'
+})
+
 var vm = new Vue({
     el: '#app',
     data: {
+        room_list: [],
         player: {
             id: '',
             name: '',
@@ -21,10 +32,11 @@ var vm = new Vue({
     },
     methods: {
         enter: function(){
-            if(room.name!='' && player.name!=''){
+            if(vm.$data.room.name!='' && vm.$data.player.name!=''){
                 vm.$data.errors.missing_login_data = false;
                 socket.emit('enter', vm.$data, function(data){
-                    vm.$data.errors.player_name_already_in_use = data.error.player_name_already_in_use;
+                    vm.$data.errors.player_name_already_in_use = data.errors.player_name_already_in_use;
+                    vm.$data.player = data.player;
                 });
             }else{
                 vm.$data.errors.missing_login_data = true;
@@ -42,6 +54,10 @@ socket.on('connect', function() {
 
 socket.on('welcome', function(message) {
     console.log(message);
+});
+
+socket.on('room_list', function(data) {
+    vm.$data.room_list = data.room_list;
 });
 
 //     vm.$data.role = message.role;

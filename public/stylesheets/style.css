@@ -10,6 +10,27 @@ html, body {
   width: 100%;
 }
 
+.btn {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  box-shadow: 0 3px #999;
+  color: white;
+  font-weight: bold;
+}
+
+.btn:hover {background-color: #3e8e41}
+
+.btn:active {
+  background-color: #3e8e41;
+  box-shadow: 0 1px #666;
+  transform: translateY(2px);
+}
+
+.error {
+  border-color: red;
+}
+
 #app {
   display: table;
   text-align: center;
@@ -24,11 +45,15 @@ html, body {
   padding: 5%;
 }
 
-#input-cnt * {
+input#player, input#room, div#enter {
   display: block;
   margin: 20px 0;
   padding: 10px;
   width: 100%;
+}
+
+#room_list {
+  display: none;
 }
 
 #role-cnt button {
