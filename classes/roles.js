@@ -5,26 +5,46 @@ class Role {
     }
 }
 
-class Assassino extends Role {
-    constructor(name){
-        super(name, false);
+class Cittadino extends Role {
+    constructor(name = "Cittadino"){
+        super(name, true);
     }
 }
 
-class Cittadino extends Role {
-    constructor(name){
+class Testimone extends Role {
+    constructor(name = "Testimone"){
         super(name, true);
     }
 }
 
 class Detective extends Role {
-    constructor(name){
-        super(name, true);
+    constructor(type){
+        switch(type){
+            case 1: super("Investigatore", true);
+                break;
+            case 2: super("Investigatrice", true);
+                break;
+        }
     }
 }
 
+class Assassino extends Role {
+    constructor(name = "Assassino"){
+        super(name, false);
+    }
+}
+
+class Mitomane extends Role {
+    constructor(name = "Mitomane"){
+        super(name, false);
+    }
+}
+
+
 module.exports = {
-    Assassino : Assassino,
     Cittadino : Cittadino,  
-    Detective : Detective
+    Testimone : Testimone,
+    Detective : Detective,
+    Assassino : Assassino,
+    Mitomane : Mitomane,
 }

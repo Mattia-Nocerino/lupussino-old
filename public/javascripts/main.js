@@ -4,10 +4,13 @@ var socket = io()
 Vue.component('room', {
     props: ['name', 'players'],
     template: '<option :value="name">' + 
-                '<span class="players_online" v-bind:class="[(players > 0) ? \'online\' : \'offline\']">' +
-                    '{{players}} online' +
-                '</span>' +
+                '<span> {{players}} online</span>' +
               '</option>'
+})
+
+Vue.component('player', {
+    props: ['name', 'status'],
+    template: '<div class="player"><span class="status" v-bind:class="[(status) ? \'online\' : \'offline\']"></span> {{name}}</div>'
 })
 
 var vm = new Vue({
@@ -19,7 +22,9 @@ var vm = new Vue({
             name: '',
             is_owner: false,
             is_online: false,
-            role: ''
+            role: {
+                name: 'In attesa che la partita inizi'
+            }
         },
         room: {
             name: '',
@@ -27,7 +32,8 @@ var vm = new Vue({
         },
         errors: {
             player_name_already_in_use: false,
-            missing_login_data: false
+            missing_login_data: false,
+            invalid_player_number: false
         }
     },
     methods: {
@@ -41,10 +47,10 @@ var vm = new Vue({
             }else{
                 vm.$data.errors.missing_login_data = true;
             }
+        },
+        new_game: function(){
+            socket.emit('new_game', vm.$data);
         }
-        // game: function(){
-        //     socket.emit('game', vm.$data);
-        // }
     }
 })
 
@@ -62,6 +68,8 @@ socket.on('room_list', function(data) {
 
 socket.on('update', function(data) {
     vm.$data.room = data.room;
+    vm.$data.player = data.room.player_list.find(x => x.id == vm.$data.player.id);
+    //vm.$data.errors.invalid_player_number = data.errors.invalid_player_number;
 });
 
 //     vm.$data.role = message.role;

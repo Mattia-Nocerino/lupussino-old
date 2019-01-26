@@ -1,7 +1,10 @@
+var Roles = require('./roles.js');
+
 class Room {
     constructor(name){
         this.name = name;
         this.player_list = [];
+        this.cards = [];
     }
 
     get player_number() {
@@ -11,6 +14,15 @@ class Room {
     get owner() {
         return this.player_list.find(x => x.is_owner == true);
     }
+
+    assignRoles() {
+        
+    }
+
+    gameStart() {
+        this.assignRoles();
+    }
 }
 
 module.exports = Room;
+

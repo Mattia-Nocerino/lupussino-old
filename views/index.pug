@@ -24,10 +24,13 @@ html
 
       //-GIOCO
       div#role-cnt(v-show="player.is_online")
-        div#new_game(v-show="player.is_owner", class="btn") Nuova partita!
+        div#new-game(@click="new_game", v-show="player.is_owner", class="btn") Nuova partita!
 
-        div#role {{player.role}}
+        div#role {{player.role.name}}
+        span(v-show="errors.invalid_player_number") Impossibile iniziare la partita, numero di giocatori non valido!
 
+        div#player-list
+          player(v-for="player in room.player_list" v-bind:name="player.name" v-bind:status="player.is_online" v-bind:key="player.id")
         //-div#detail {{detail}}
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')

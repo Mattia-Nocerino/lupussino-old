@@ -33,7 +33,7 @@ class Player {
                 another_user.is_owner = true;
             }
             return 1;
-        } else {//stanza da eliminare!
+        } else {//stanza da eliminare! (no idiota, perché se escono tutti sei ner bottino!)
             this.is_owner = false;
             return -1
         }

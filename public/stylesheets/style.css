@@ -28,8 +28,13 @@ html, body {
 }
 
 .status {
-  padding: 5px;
   border-radius: 100%;
+  margin-right: 5px;
+  padding: 0;
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  line-height: 5px;
 }
 
 .status.online {
@@ -67,12 +72,24 @@ html, body {
   display: none;
 }
 
-#new_game {
+#new-game {
   position: absolute;
   bottom: 50px;
   left: 50%;
   transform: translate(-50%, 0);
   width: 90%;
+}
+
+#player-list {
+  position: absolute;
+  top: 5px;
+  left: 5%;
+  text-align: left !important;
+}
+
+.player {
+  font-size: 10px;
+  margin-bottom: 5px;
 }
 
 #role {

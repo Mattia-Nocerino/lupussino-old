@@ -1,25 +1,48 @@
 var socket_io = require('socket.io');
 var Room = require('./classes/room.js');
 var Player = require('./classes/player.js');
+var Roles = require('./classes/roles.js');
 var io = socket_io();
 var api = {};
 api.io = io;
 
+const configuration = [
+    {players: 3, cards: [
+        {role: new Roles.Cittadino(), qty: 1}, 
+        {role: new Roles.Testimone(), qty: 2}, 
+        {role: new Roles.Assassino(), qty: 1}, 
+        {role: new Roles.Detective(1), qty: 1},
+        {role: new Roles.Mitomane(), qty: 1}
+    ]},
+    {players: 4, cards: [
+        {role: new Roles.Cittadino(), qty: 1}, 
+        {role: new Roles.Testimone(), qty: 2}, 
+        {role: new Roles.Assassino(), qty: 1}, 
+        {role: new Roles.Detective(1), qty: 1},
+        {role: new Roles.Detective(2), qty: 1},
+        {role: new Roles.Mitomane(), qty: 1}
+    ]},
+    {players: 5, cards: [
+        {role: new Roles.Cittadino(), qty: 1}, 
+        {role: new Roles.Testimone(), qty: 2}, 
+        {role: new Roles.Assassino(), qty: 2}, 
+        {role: new Roles.Detective(1), qty: 1},
+        {role: new Roles.Detective(2), qty: 1},
+        {role: new Roles.Mitomane(), qty: 1}
+    ]},
+    {players: 6, cards: [
+        {role: new Roles.Cittadino(), qty: 2}, 
+        {role: new Roles.Testimone(), qty: 2}, 
+        {role: new Roles.Assassino(), qty: 2}, 
+        {role: new Roles.Detective(1), qty: 1},
+        {role: new Roles.Detective(2), qty: 1},
+        {role: new Roles.Mitomane(), qty: 1}
+    ]}
+];
+
 var room_list = [];
 
-const configurazioni = [
-    null, //0
-    null, //1
-    null, //2
-    ["cittadino", "testimone", "testimone", "assassino", "mitomane", "investigatore"], //3
-    ["cittadino", "testimone", "testimone", "assassino", "mitomane", "investigatore", "investigatrice"], //4
-    ["cittadino", "testimone", "testimone", "assassino", "assassino", "mitomane", "investigatore", "investigatrice"], //5
-    ["cittadino", "cittadino", "testimone", "testimone", "assassino", "assassino", "mitomane", "investigatore", "investigatrice"], //6
-    null, //7
-    null, //8
-    null, //9
-    null  //10
-];
+console.log(configuration.find(x => x.players == 3).cards);
 
 io.on('connection', function(socket){
     socket.emit('room_list', {room_list: room_list});
@@ -53,6 +76,7 @@ io.on('connection', function(socket){
         } else {
             socket.join(new_room.name);
             io.to(new_room.name).emit('update', {room: new_room});
+            console.log(new_room.player_list);
         }
 
         io.emit('room_list', {room_list: room_list});
@@ -64,6 +88,27 @@ io.on('connection', function(socket){
             }
         });
     });
+
+    socket.on('new_game', function(data){
+        var room = room_list.find(x => x.name == data.room.name);
+        var invalid_player_number = false;
+
+        room.cards = configuration.find(x => x.players == room.player_number).cards;
+
+        if (room.cards == undefined) {
+            invalid_player_number = true;
+        } else {
+            room.gameStart();
+        }
+
+        io.to(room.name).emit('update', {
+            room: room
+            // ,
+            // errors: {
+            //     invalid_player_number: invalid_player_number
+            // }
+        });
+    })
 
 //     socket.on('game', function(data, callback){
 //         //carico la configurazione in base al numero di giocatori nella stanza
