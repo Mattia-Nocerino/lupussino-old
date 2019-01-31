@@ -131,22 +131,23 @@ io.on('connection', function(socket){
     socket.on('game', function(data, callback){
         //CARICAMENTO CONFIGURAZIONE
         var room = room_list.find(x => x.name == data.room.name);
-        var tot_players = room.player_number;
+        var players_online = room.player_list.filter(x => x.is_online).slice();
+        var tot_players = players_online.length;
         if (tot_players >= 3) {
             configurazione_attiva = configurazioni[tot_players].slice();
             //ASSEGNAZIONE RUOLI + ESILIATE
-            for(var player of room.player_list){
+            for(var player of players_online){
                 var random_item = Math.floor(Math.random() * configurazione_attiva.length);
                 player.role = configurazione_attiva[random_item];
                 configurazione_attiva.splice(random_item, 1);
             }
             var esiliate = configurazione_attiva;
-            var assassini = room.player_list.filter(x => x.role == 'Assassino').slice();
+            var assassini = players_online.filter(x => x.role == 'Assassino').slice();
 
-            console.log(room.player_list);
+            console.log(players_online);
             console.log(assassini);
 
-            room.player_list.forEach(player => {
+            players_online.forEach(player => {
                 var altro_testimone = '';
                 var altro_assassino = '';
 
@@ -161,7 +162,7 @@ io.on('connection', function(socket){
                         detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
                         break;
                     case "Testimone":
-                        for(var t of room.player_list){
+                        for(var t of players_online){
                             if (t.role == 'Testimone' && t.name != player.name){
                                 altro_testimone = t.name;
                             }
@@ -187,7 +188,7 @@ io.on('connection', function(socket){
                         }
                         break;
                     case "Assassino":
-                        for(var a of room.player_list){
+                        for(var a of players_online){
                             if (a.role == 'Assassino' && a.name != player.name){
                                 altro_assassino = a.name;
                             }
