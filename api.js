@@ -59,6 +59,8 @@ var esiliate = [];
 var room_list = [];
 
 io.on('connection', function(socket){
+
+    //Invia la room list quando ti connetti
     socket.emit('room_list', {room_list: room_list});
 
     socket.on('disconnect', function(){
@@ -67,13 +69,13 @@ io.on('connection', function(socket){
             leaving_player = room.player_list.find(x => x.id == socket.id && x.is_online);
             if (leaving_player != undefined){
                 leaving_player.leaveRoom(room);
-                io.to(room.name).emit('update', {room: room});
+                io.to(room.name).emit('room_update', {room: room});
             }
             socket.leave(room.name);
         });
     });
 
-    socket.on('enter', function(data, callback){
+    socket.on('room_enter', function(data, callback){
         var new_room = room_list.find(x => x.name == data.room.name);
         var new_player = new Player(socket.id, data.player.name);
         var player_name_already_in_use = false;
@@ -82,6 +84,8 @@ io.on('connection', function(socket){
             new_room = new Room(data.room.name);
             room_list.push(new_room);
             new_player.is_owner = true;
+
+            io.emit('room_list', {room_list: room_list});
         }
 
         if (new_player.joinRoom(new_room) == -1){
@@ -89,10 +93,8 @@ io.on('connection', function(socket){
             new_player.is_online = false;
         } else {
             socket.join(new_room.name);
-            io.to(new_room.name).emit('update', {room: new_room});
+            io.to(new_room.name).emit('room_update', {room: new_room});
         }
-
-        io.emit('room_list', {room_list: room_list});
 
         callback({
             player: new_player,
@@ -141,7 +143,6 @@ io.on('connection', function(socket){
             var esiliate = configurazione_attiva;
             var assassini = room.player_list.filter(x => x.role == 'Assassino').slice();
 
-
             console.log(room.player_list);
             console.log(assassini);
 
@@ -187,7 +188,7 @@ io.on('connection', function(socket){
                         break;
                     case "Assassino":
                         for(var a of room.player_list){
-                            if (a.role == 'assassino' && a.name != player.name){
+                            if (a.role == 'Assassino' && a.name != player.name){
                                 altro_assassino = a.name;
                             }
                         }

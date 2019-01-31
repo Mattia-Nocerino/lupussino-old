@@ -13,13 +13,15 @@ Vue.component('player', {
     template: '<div class="player"><span class="status" v-bind:class="[(status) ? \'online\' : \'offline\']"></span> {{name}}</div>'
 })
 
+var name = getCookie('name');
+
 var vm = new Vue({
     el: '#app',
     data: {
         room_list: [],
         player: {
             id: '',
-            name: '',
+            name: name,
             is_owner: false,
             is_online: false//,
             // role: {
@@ -39,10 +41,11 @@ var vm = new Vue({
         detail: '',
     },
     methods: {
-        enter: function(){
+        room_enter: function(){
             if(vm.$data.room.name!='' && vm.$data.player.name!=''){
                 vm.$data.errors.missing_login_data = false;
-                socket.emit('enter', vm.$data, function(data){
+                socket.emit('room_enter', vm.$data, function(data){
+                    setCookie('name', vm.$data.player.name, 14);
                     vm.$data.errors.player_name_already_in_use = data.errors.player_name_already_in_use;
                     vm.$data.player = data.player;
                 });
@@ -58,6 +61,13 @@ var vm = new Vue({
 
 socket.on('connect', function() {
     vm.$data.player.id = socket.id;
+
+    if (vm.$data.room.name!='' && vm.$data.player.name!=''){
+        socket.emit('room_enter', vm.$data, function(data){
+            vm.$data.errors.player_name_already_in_use = data.errors.player_name_already_in_use;
+            vm.$data.player = data.player;
+        });
+    }
 });
 
 socket.on('welcome', function(message) {
@@ -68,9 +78,9 @@ socket.on('room_list', function(data) {
     vm.$data.room_list = data.room_list;
 });
 
-socket.on('update', function(data) {
+socket.on('room_update', function(data) {
     vm.$data.room = data.room;
-    vm.$data.player = data.room.player_list.find(x => x.id == vm.$data.player.id);
+    //vm.$data.player = data.room.player_list.find(x => x.id == vm.$data.player.id);
 });
 
 //     vm.$data.role = message.role;
@@ -80,4 +90,29 @@ socket.on('update', function(data) {
 socket.on('role', function(message) {
     vm.$data.role = message.role;
     vm.$data.detail = message.detail;
-})
+});
+
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
+}
