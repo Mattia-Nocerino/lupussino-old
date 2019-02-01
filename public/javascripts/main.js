@@ -9,8 +9,18 @@ Vue.component('room', {
 })
 
 Vue.component('player', {
-    props: ['name', 'status'],
-    template: '<div class="player"><span class="status" v-bind:class="[(status) ? \'online\' : \'offline\']"></span> {{name}}</div>'
+    props: ['name', 'status', 'owner', 'crown'],
+    template: '<div class="player">' + 
+                    '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
+                    '{{name}}' + 
+                    '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner"></span>' + 
+                    '<span class="crown fas fa-crown" v-show="crown"></span>' + 
+              '</div>',
+    methods: {
+        kick: function(name){
+            socket.emit('kick', vm.$data.room.name, name);
+        }
+    }
 })
 
 var name = getCookie('name');
@@ -21,7 +31,7 @@ var vm = new Vue({
         room_list: [],
         player: {
             id: '',
-            name: name,
+            name: '', //name
             is_owner: false,
             is_online: false//,
             // role: {
@@ -39,6 +49,7 @@ var vm = new Vue({
         },
         role: 'In attesa che la partita inizi',
         detail: '',
+        game_started: false
     },
     methods: {
         room_enter: function(){
@@ -55,6 +66,7 @@ var vm = new Vue({
         },
         game: function(){
             socket.emit('game', vm.$data);
+            vm.$data.game_started = false;
         }
     }
 })
@@ -80,7 +92,15 @@ socket.on('room_list', function(data) {
 
 socket.on('room_update', function(data) {
     vm.$data.room = data.room;
-    vm.$data.player = data.room.player_list.find(x => x.name == vm.$data.player.name);
+
+    if (data.room.player_list.find(x => x.name == vm.$data.player.name) != undefined){
+        vm.$data.player = data.room.player_list.find(x => x.name == vm.$data.player.name);
+    } else {
+        //giocatore kickato!
+        vm.$data.player.is_online = false
+        vm.$data.role = 'In attesa che la partita inizi'
+        vm.$data.detail = ''
+    }
 });
 
 //     vm.$data.role = message.role;

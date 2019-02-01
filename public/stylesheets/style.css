@@ -2,6 +2,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 html, body {
@@ -27,7 +31,7 @@ html, body {
   transform: translateY(2px);
 }
 
-.status {
+/* .status {
   border-radius: 100%;
   margin-right: 5px;
   padding: 0;
@@ -35,15 +39,15 @@ html, body {
   height: 7px;
   display: inline-block;
   line-height: 5px;
-}
+} */
 
-.status.online {
-  background-color: #4CAF50;
+.online {
+  /* background-color: #4CAF50; */
   color: #4CAF50;
 }
 
-.status.offline {
-  background-color: #dc0001;
+.offline {
+  /*background-color: #dc0001;*/
   color: #dc0001;
 }
 
@@ -68,7 +72,7 @@ html, body {
   width: 100%;
 }
 
-#room_list {
+#room-list {
   display: none;
 }
 
@@ -80,25 +84,66 @@ html, body {
   width: 90%;
 }
 
-#player-list {
+#player-list-cnt {
   position: absolute;
   top: 5px;
   left: 5%;
+  border: 1px solid #eee;
+}
+
+#player-list-title {
+  color: #4CAF50;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  padding: 10px; 
+}
+
+#player-list {
   text-align: left !important;
+  padding: 10px;
 }
 
 .player {
-  font-size: 10px;
-  margin-bottom: 5px;
+  font-size: 14px;
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+}
+
+.player:hover {
+  background-color: #ddd;
+  border: 1px solid #aaa;
+}
+
+.kick, .crown {
+  margin-left: 5px;
+  margin-top: 2px;
+  cursor: pointer;
+  float: right;
+}
+
+.kick {
+  color: #444;
+}
+.crown {
+  color: #fda40b;
+  cursor: default;
+}
+
+.status {
+  margin-right: 5px;
 }
 
 #role {
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 22px;
+  font-size: 26px;
+  text-shadow: 1px 1px 0px #AAA;
 }
 
 #detail {
   font-style: italic;
+  font-size: 18px;
   margin-top: 10px;
 }
