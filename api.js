@@ -59,7 +59,6 @@ var esiliate = [];
 var room_list = [];
 
 io.on('connection', function(socket){
-
     //Invia la room list quando ti connetti
     socket.emit('room_list', {room_list: room_list});
 
@@ -72,8 +71,6 @@ io.on('connection', function(socket){
                 io.to(room.name).emit('room_update', {room: room});
                 io.emit('room_list', {room_list: room_list});
             }
-            socket.leave(room.name);
-
             // console.log(room_list);
             // console.log(room_list[0].player_list);
             // console.log(socket.rooms);
@@ -82,9 +79,13 @@ io.on('connection', function(socket){
 
     socket.on('kick', function(room_name, kicked_player){
         var room = room_list.find(x => x.name == room_name);
-        room.player_list = room.player_list.filter(x => x.name != kicked_player);
-        //console.log(room.player_list.filter(x => x.name != kicked_player));
-        io.to(room.name).emit('room_update', {room: room});
+        var player = room.player_list.find(x => x.name == kicked_player);
+        if (player != undefined){
+            room.player_list = room.player_list.filter(x => x.name != kicked_player);
+            io.to(room.name).emit('room_update', {room: room});
+            
+            io.sockets.sockets[player.id].leave(room.name);
+        }
     });
 
     socket.on('room_enter', function(data, callback){
