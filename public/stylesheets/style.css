@@ -27,7 +27,7 @@ html, body {
   transform: translateY(2px);
 }
 
-.status {
+/* .status {
   border-radius: 100%;
   margin-right: 5px;
   padding: 0;
@@ -35,15 +35,15 @@ html, body {
   height: 7px;
   display: inline-block;
   line-height: 5px;
-}
+} */
 
-.status.online {
-  background-color: #4CAF50;
+.online {
+  /* background-color: #4CAF50; */
   color: #4CAF50;
 }
 
-.status.offline {
-  background-color: #dc0001;
+.offline {
+  /*background-color: #dc0001;*/
   color: #dc0001;
 }
 
@@ -68,7 +68,7 @@ html, body {
   width: 100%;
 }
 
-#room_list {
+#room-list {
   display: none;
 }
 
@@ -81,6 +81,7 @@ html, body {
 }
 
 #player-list {
+  min-width: 300px;
   position: absolute;
   top: 5px;
   left: 5%;
@@ -88,8 +89,15 @@ html, body {
 }
 
 .player {
-  font-size: 10px;
-  margin-bottom: 5px;
+  font-size: 14px;
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.player:hover {
+  background-color: #ddd;
+  border: 1px solid #aaa;
 }
 
 #role {

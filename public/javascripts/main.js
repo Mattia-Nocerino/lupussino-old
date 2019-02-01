@@ -10,7 +10,11 @@ Vue.component('room', {
 
 Vue.component('player', {
     props: ['name', 'status'],
-    template: '<div class="player"><span class="status" v-bind:class="[(status) ? \'online\' : \'offline\']"></span> {{name}}</div>'
+    template: '<div class="player">' + 
+                    '<span class="kick fas fa-times-circle"></span>' + 
+                    '<span class="status fas fa-user-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
+                        '{{name}}' + 
+              '</div>'
 })
 
 var name = getCookie('name');
@@ -21,7 +25,7 @@ var vm = new Vue({
         room_list: [],
         player: {
             id: '',
-            name: name,
+            name: '', //name
             is_owner: false,
             is_online: false//,
             // role: {
