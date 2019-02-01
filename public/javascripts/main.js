@@ -11,9 +11,9 @@ Vue.component('room', {
 Vue.component('player', {
     props: ['name', 'status'],
     template: '<div class="player">' + 
+                    '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
+                    '{{name}}' + 
                     '<span class="kick fas fa-times-circle"></span>' + 
-                    '<span class="status fas fa-user-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
-                        '{{name}}' + 
               '</div>'
 })
 

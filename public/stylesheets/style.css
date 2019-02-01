@@ -2,6 +2,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 html, body {
@@ -81,11 +85,13 @@ html, body {
 }
 
 #player-list {
-  min-width: 300px;
+  min-width: 150px;
   position: absolute;
   top: 5px;
   left: 5%;
   text-align: left !important;
+  border: 1px solid #eee;
+  padding: 10px;
 }
 
 .player {
@@ -93,11 +99,23 @@ html, body {
   width: 100%;
   padding: 5px;
   border-radius: 5px;
+  border: 1px solid transparent;
 }
 
 .player:hover {
   background-color: #ddd;
   border: 1px solid #aaa;
+}
+
+.kick {
+  margin-right: 10px;
+  color: #444;
+  cursor: pointer;
+  float: right;
+}
+
+.status {
+  margin-right: 5px;
 }
 
 #role {
