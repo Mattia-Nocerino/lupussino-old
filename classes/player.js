@@ -9,13 +9,14 @@ class Player {
 
     joinRoom(room){
         var existing_player = room.player_list.find(x => x.name == this.name);
+
         if (existing_player == undefined){ //nuovo giocatore, inserire!
-            if (room.player_list.find(x => x.is_owner) == undefined) this.is_owner = true; //controllo se non ci sono owner al momento
+            this.setOwnership(room);
             room.player_list.push(this);
             return 0;
         } else if (!existing_player.is_online) {//riconnesso, rimuovi e riaggiungi
+            this.setOwnership(room);
             room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
-            if (room.player_list.find(x => x.is_owner) == undefined) this.is_owner = true; //controllo se non ci sono owner al momento
             room.player_list.push(this);
             return 1;
         } else {//nome già utilizzato!
@@ -25,18 +26,24 @@ class Player {
 
     leaveRoom(room){
         this.is_online = false;
-        var another_user = room.player_list.find(x => x.is_online);
 
-        if (another_user != undefined) {//c'è un'altro giocatore, mantieni la stanza ed eventualmente trasferisci l'ownership
-            if (this.is_owner){
-                this.is_owner = false;
-                another_user.is_owner = true;
+        if (this.is_owner){
+            var new_owner = room.player_list.find(x => x.is_online);
+            if (new_owner != undefined) {
+                new_owner.setOwnership(room);
             }
-            return 1;
-        } else {//stanza da eliminare! (no idiota, perché se escono tutti sei ner bottino!)
-            this.is_owner = false;
-            return -1
         }
+    }
+
+    setOwnership(room){
+        var current_owner = room.player_list.find(x => x.is_owner);
+
+        if (current_owner == undefined){//owner inesistente
+            this.is_owner = true;
+        } else if (!current_owner.is_online){//owner inesistente MA offline
+            this.is_owner = true;
+            current_owner.is_owner = false;
+        }//owner c'è ed è online, non faccio niente
     }
 }
 
