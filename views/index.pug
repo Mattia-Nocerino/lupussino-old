@@ -25,7 +25,7 @@ html
 
       //-GIOCO
       div#role-cnt(v-if="player.is_online")
-        div#new-game(@click="game", v-show="player.is_owner && game_started == false && room.player_list.filter(x => x.is_online).length > 2", class="btn") Nuova partita!
+        div#new-game(@click="game", v-show="player.is_owner && game_started == false && room.player_list.filter(x => x.is_online).length > 2 && room.player_list.filter(x => x.is_online).length < 7", class="btn") Nuova partita!
 
         //-div#role {{player.role.name}}
         div#role {{ role }}
@@ -34,7 +34,7 @@ html
         div#player-list-cnt
           div#player-list-title Giocatori online - Stanza {{room.name}}
           div#player-list
-            player(v-for="p in room.player_list" v-if="p.name!=player.name" v-bind:name="p.name" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id")
+            player(v-for="p in room.player_list" v-if="p.name!=player.name" v-bind:name="p.name" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner")
         //-div#detail {{detail}}
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')

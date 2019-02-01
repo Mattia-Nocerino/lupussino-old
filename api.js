@@ -80,11 +80,13 @@ io.on('connection', function(socket){
     socket.on('kick', function(room_name, kicked_player){
         var room = room_list.find(x => x.name == room_name);
         var player = room.player_list.find(x => x.name == kicked_player);
+        var leaving_socket;
         if (player != undefined){
             room.player_list = room.player_list.filter(x => x.name != kicked_player);
             io.to(room.name).emit('room_update', {room: room});
-            
-            io.sockets.sockets[player.id].leave(room.name);
+            if (io.sockets.sockets[player.id] != undefined){
+                io.sockets.sockets[player.id].leave(room.name);
+            }    
         }
     });
 

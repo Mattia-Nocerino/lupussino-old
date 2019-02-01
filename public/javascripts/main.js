@@ -9,11 +9,12 @@ Vue.component('room', {
 })
 
 Vue.component('player', {
-    props: ['name', 'status', 'owner'],
+    props: ['name', 'status', 'owner', 'crown'],
     template: '<div class="player">' + 
                     '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
                     '{{name}}' + 
                     '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner"></span>' + 
+                    '<span class="crown fas fa-crown" v-show="crown"></span>' + 
               '</div>',
     methods: {
         kick: function(name){
