@@ -123,8 +123,13 @@ html, body {
   float: right;
 }
 
-.kick {color: #444;}
-.crown {color: #fda40b;}
+.kick {
+  color: #444;
+}
+.crown {
+  color: #fda40b;
+  cursor: default;
+}
 
 .status {
   margin-right: 5px;
