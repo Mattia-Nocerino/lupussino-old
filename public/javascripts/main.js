@@ -80,7 +80,7 @@ socket.on('room_list', function(data) {
 
 socket.on('room_update', function(data) {
     vm.$data.room = data.room;
-    //vm.$data.player = data.room.player_list.find(x => x.id == vm.$data.player.id);
+    vm.$data.player = data.room.player_list.find(x => x.name == vm.$data.player.name);
 });
 
 //     vm.$data.role = message.role;

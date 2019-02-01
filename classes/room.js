@@ -4,7 +4,7 @@ class Room {
     constructor(name){
         this.name = name;
         this.player_list = [];
-        this.cards = [];
+        //this.cards = [];
     }
 
     get player_number() {

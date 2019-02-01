@@ -72,6 +72,10 @@ io.on('connection', function(socket){
                 io.to(room.name).emit('room_update', {room: room});
             }
             socket.leave(room.name);
+
+            // console.log(room_list);
+            // console.log(room_list[0].player_list);
+            // console.log(socket.rooms);
         });
     });
 
@@ -102,6 +106,9 @@ io.on('connection', function(socket){
                 player_name_already_in_use: player_name_already_in_use
             }
         });
+        // console.log(room_list);
+        // console.log(room_list[0].player_list);
+        // console.log(socket.rooms);
     });
 
     //NUOVA FUNZIONE (DA CONTINUARE)
@@ -144,8 +151,8 @@ io.on('connection', function(socket){
             var esiliate = configurazione_attiva;
             var assassini = players_online.filter(x => x.role == 'Assassino').slice();
 
-            console.log(players_online);
-            console.log(assassini);
+            // console.log(players_online);
+            // console.log(assassini);
 
             players_online.forEach(player => {
                 var altro_testimone = '';
