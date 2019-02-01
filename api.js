@@ -70,6 +70,7 @@ io.on('connection', function(socket){
             if (leaving_player != undefined){
                 leaving_player.leaveRoom(room);
                 io.to(room.name).emit('room_update', {room: room});
+                io.emit('room_list', {room_list: room_list});
             }
             socket.leave(room.name);
 
@@ -88,8 +89,6 @@ io.on('connection', function(socket){
             new_room = new Room(data.room.name);
             room_list.push(new_room);
             new_player.is_owner = true;
-
-            io.emit('room_list', {room_list: room_list});
         }
 
         if (new_player.joinRoom(new_room) == -1){
@@ -99,6 +98,8 @@ io.on('connection', function(socket){
             socket.join(new_room.name);
             io.to(new_room.name).emit('room_update', {room: new_room});
         }
+
+        io.emit('room_list', {room_list: room_list});
 
         callback({
             player: new_player,
