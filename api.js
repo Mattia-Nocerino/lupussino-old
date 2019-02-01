@@ -80,6 +80,13 @@ io.on('connection', function(socket){
         });
     });
 
+    socket.on('kick', function(room_name, kicked_player){
+        var room = room_list.find(x => x.name == room_name);
+        room.player_list = room.player_list.filter(x => x.name != kicked_player);
+        //console.log(room.player_list.filter(x => x.name != kicked_player));
+        io.to(room.name).emit('room_update', {room: room});
+    });
+
     socket.on('room_enter', function(data, callback){
         var new_room = room_list.find(x => x.name == data.room.name);
         var new_player = new Player(socket.id, data.player.name);

@@ -84,13 +84,22 @@ html, body {
   width: 90%;
 }
 
-#player-list {
-  min-width: 150px;
+#player-list-cnt {
   position: absolute;
   top: 5px;
   left: 5%;
-  text-align: left !important;
   border: 1px solid #eee;
+}
+
+#player-list-title {
+  color: #4CAF50;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  padding: 10px; 
+}
+
+#player-list {
+  text-align: left !important;
   padding: 10px;
 }
 
@@ -108,7 +117,8 @@ html, body {
 }
 
 .kick {
-  margin-right: 10px;
+  margin-left: 5px;
+  margin-top: 2px;
   color: #444;
   cursor: pointer;
   float: right;
