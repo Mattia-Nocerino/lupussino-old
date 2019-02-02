@@ -9,11 +9,11 @@ Vue.component('room', {
 })
 
 Vue.component('player', {
-    props: ['name', 'status', 'owner', 'crown'],
-    template: '<div class="player">' + 
+    props: ['name', 'status', 'owner', 'crown', 'myself'],
+    template: '<div class="player" v-bind:class="[(myself) ? \'myself\' : \'\']">' + 
                     '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
                     '{{name}}' + 
-                    '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner"></span>' + 
+                    '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner && !myself"></span>' + 
                     '<span class="crown fas fa-crown" v-show="crown"></span>' + 
               '</div>',
     methods: {
@@ -49,7 +49,9 @@ var vm = new Vue({
         },
         role: 'In attesa che la partita inizi',
         detail: '',
-        game_started: false
+        game_started: false,
+        player_list_open: true,
+        card_face_up: true
     },
     methods: {
         room_enter: function(){
