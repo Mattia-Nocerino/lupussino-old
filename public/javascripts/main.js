@@ -40,7 +40,9 @@ var vm = new Vue({
         },
         room: {
             name: '',
-            player_list: []
+            player_list: [],
+            mitomane_riconosce_assassini: false,
+            testimoni_si_riconoscono: false
         },
         errors: {
             player_name_already_in_use: false,
@@ -70,6 +72,10 @@ var vm = new Vue({
         game: function(){
             socket.emit('game', vm.$data);
             vm.$data.game_started = false;
+        },
+        update_settings: function(){
+            socket.emit('update_settings', vm.$data);
+            vm.$data.setting_window_open = false;
         }
     }
 })

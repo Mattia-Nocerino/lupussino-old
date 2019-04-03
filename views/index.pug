@@ -49,14 +49,14 @@ html
         div#setting-list
           div(class="setting") Mitomane riconosce Assassini
             label(class="switch")
-              input(type="checkbox")
+              input(type="checkbox", v-model="room.mitomane_riconosce_assassini")
               span(class="slider")
           div(class="setting") Testimoni si riconoscono
             label(class="switch")
-              input(type="checkbox")
+              input(type="checkbox", v-model="room.testimoni_si_riconoscono")
               span(class="slider")
 
-        div#save-setting(class="btn") Salva impostazioni
+        div#save-setting(@click="update_settings",class="btn") Salva impostazioni
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')

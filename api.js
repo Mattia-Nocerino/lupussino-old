@@ -122,6 +122,14 @@ io.on('connection', function(socket){
         // console.log(socket.rooms);
     });
 
+    socket.on('update_settings', function(data, callback){
+        var room = room_list.find(x => x.name == data.room.name);
+        room.mitomane_riconosce_assassini = data.room.mitomane_riconosce_assassini;
+        room.testimoni_si_riconoscono = data.room.testimoni_si_riconoscono;
+
+        io.to(room.name).emit('room_update', {room: room});
+    });
+
     //NUOVA FUNZIONE (DA CONTINUARE)
     // socket.on('new_game', function(data){
     //     var room = room_list.find(x => x.name == data.room.name);
@@ -189,7 +197,7 @@ io.on('connection', function(socket){
                         if (altro_testimone == ''){
                             detail = "Sei il testimone... ma da solo";
                         } else {
-                            if (tot_players > 5){
+                            if (room.testimoni_si_riconoscono){
                                 detail = "Sei testimone con " + altro_testimone;
                             } else {
                                 detail = "Sei testimone insieme a qualcun altro!";
@@ -197,7 +205,7 @@ io.on('connection', function(socket){
                         }
                         break;
                     case "Mitomane":
-                        if (tot_players > 5){
+                        if (room.mitomane_riconosce_assassini){
                             if (assassini.length == 2) detail = "Sei il mitomane e gli assassini sono " + assassini[0].name + " e " + assassini[1].name;
                             if (assassini.length == 1) detail = "Sei il mitomane e l'assassino è " + assassini[0].name;
                             if (assassini.length == 0) detail = "Sei il mitomane e non ci sono assassini in giro ad aiutarti";
