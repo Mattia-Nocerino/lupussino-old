@@ -101,6 +101,13 @@ html, body {
   transform: rotate(180deg);
 }
 
+#setting-toggle {
+  float: left;
+  cursor: pointer;
+  font-size: 16px;
+  color: #444
+}
+
 #player-list {
   text-align: left !important;
   overflow-y: scroll;
