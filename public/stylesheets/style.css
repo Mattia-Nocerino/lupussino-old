@@ -116,12 +116,16 @@ html, body {
 #setting-toggle.open {
   color: #fff;
   transform: rotate(180deg);
+  /* position: absolute;
+  font-size: 28px;
+  top: 5px;
+  left: 6px; */
 }
 
 #player-list {
   text-align: left !important;
   overflow-y: scroll;
-  max-height: 120px;
+  max-height: 130px;
 }
 
 #player-list-cnt.close #player-list{
@@ -220,6 +224,56 @@ html, body {
   z-index: 1;
 }
 
+.blur {
+  filter: blur(3px);
+}
+
+#setting-window {
+  position: absolute;
+  display: table;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  top: 0;
+  left: 0;
+  padding: 5%;
+}
+
+#setting-window.close {
+  opacity: 0;
+  z-index: -999;
+}
+
+#setting-window.open {
+  opacity: 1;
+  z-index: 998;
+}
+
+#setting-list {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.setting {
+  text-align: left;
+  font-weight: bold;
+  color: #fff;
+  text-shadow:
+   -1px -1px 0 #111,  
+    1px -1px 0 #111,
+    -1px 1px 0 #111,
+     1px 1px 0 #111;
+  padding: 20px 0;
+}
+
+#save-setting {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 90%;
+}
+
 .switch {
   position: relative;
   float: right;
@@ -235,32 +289,6 @@ html, body {
   height: 0;
   margin: 0;
   padding: 0;
-}
-
-#setting-window {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.8);
-  z-index: 998;
-  top: 0;
-  padding: 5%;
-}
-
-#setting-window.close {
-  right: 100%;
-}
-
-#setting-window.open {
-  right: 0%;
-}
-
-#save-setting {
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 90%;
 }
 
 /* The slider */
