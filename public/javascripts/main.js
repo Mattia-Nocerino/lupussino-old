@@ -51,7 +51,8 @@ var vm = new Vue({
         detail: '',
         game_started: false,
         player_list_open: true,
-        card_face_up: true
+        card_face_up: true,
+        setting_window_open: false,
     },
     methods: {
         room_enter: function(){
