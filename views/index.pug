@@ -27,13 +27,15 @@ html
       div#role-cnt(v-if="player.is_online")
 
         div#player-list-cnt(v-bind:class="[(player_list_open) ? 'open':'close']")
-          div#player-list-title(@click="player_list_open = !player_list_open") Stanza {{room.name}} - {{room.player_list.filter(x => x.is_online).length}}/{{room.player_list.length}}
-            span#player-list-toggle(class="fas fa-arrow-alt-circle-up")
-          div#player-list
+          div#player-list-title
+            span#setting-toggle(class="fas fa-cog", v-show="player.is_owner", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
+            span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{room.player_list.filter(x => x.is_online).length}}/{{room.player_list.length}}
+            span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
+          div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
             player(v-bind:name="player.name" v-bind:status="player.is_online" v-bind:owner="player.is_owner" v-bind:key="player.id" v-bind:crown="player.is_owner" v-bind:myself="true")
             player(v-for="p in room.player_list" v-if="p.name!=player.name" v-bind:name="p.name" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner" v-bind:myself="player.id==p.id")
 
-        div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down']")
+        div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
             div(class="flip-card-front")
               div#role-description-cnt
@@ -42,6 +44,19 @@ html
             div(class="flip-card-back")
 
         div#new-game(@click="game", v-show="player.is_owner && game_started == false && room.player_list.filter(x => x.is_online).length > 2 && room.player_list.filter(x => x.is_online).length < 7", class="btn") Nuova partita!
+
+      div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
+        div#setting-list
+          div(class="setting") Mitomane riconosce Assassini
+            label(class="switch")
+              input(type="checkbox", v-model="room.mitomane_riconosce_assassini")
+              span(class="slider")
+          div(class="setting") Testimoni si riconoscono
+            label(class="switch")
+              input(type="checkbox", v-model="room.testimoni_si_riconoscono")
+              span(class="slider")
+
+        div#save-setting(@click="update_settings",class="btn") Salva impostazioni
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
