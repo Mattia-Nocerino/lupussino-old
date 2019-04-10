@@ -31,7 +31,7 @@ var vm = new Vue({
         room_list: [],
         player: {
             id: '',
-            name: '', //name
+            name: name,
             is_owner: false,
             is_online: false//,
             // role: {
@@ -55,6 +55,8 @@ var vm = new Vue({
         player_list_open: true,
         card_face_up: true,
         setting_window_open: false,
+        mitomane_riconosce_assassini: false,
+        testimoni_si_riconoscono: false,
     },
     methods: {
         room_enter: function(){
@@ -76,6 +78,22 @@ var vm = new Vue({
         update_settings: function(){
             socket.emit('update_settings', vm.$data);
             vm.$data.setting_window_open = false;
+        },
+        open_settings: function(){
+            if (vm.$data.setting_window_open == false){ //stai aprendo
+                vm.$data.mitomane_riconosce_assassini = vm.$data.room.mitomane_riconosce_assassini;
+                vm.$data.testimoni_si_riconoscono = vm.$data.room.testimoni_si_riconoscono;
+
+                vm.$data.setting_window_open = true;
+            } else if (vm.$data.mitomane_riconosce_assassini != vm.$data.room.mitomane_riconosce_assassini || vm.$data.testimoni_si_riconoscono != vm.$data.room.testimoni_si_riconoscono) {//chiudi con impostazioni cambiate
+                if (confirm("Chiudere senza salvare?")) {
+                    vm.$data.room.mitomane_riconosce_assassini = vm.$data.mitomane_riconosce_assassini;
+                    vm.$data.room.testimoni_si_riconoscono = vm.$data.testimoni_si_riconoscono;
+                    vm.$data.setting_window_open = false;
+                }
+            } else { //chiudi normalmente
+                vm.$data.setting_window_open = false;
+            }
         }
     }
 })

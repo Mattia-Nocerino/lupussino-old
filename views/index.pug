@@ -28,7 +28,7 @@ html
 
         div#player-list-cnt(v-bind:class="[(player_list_open) ? 'open':'close']")
           div#player-list-title
-            span#setting-toggle(class="fas fa-cog", v-show="player.is_owner", @click="setting_window_open = !setting_window_open", v-bind:class="[(setting_window_open) ? 'open':'close']")
+            span#setting-toggle(class="fas fa-cog", v-show="player.is_owner", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
             span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{room.player_list.filter(x => x.is_online).length}}/{{room.player_list.length}}
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
           div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
