@@ -12,6 +12,16 @@
 	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
 }
 
+
+/*fix iphone?*/
+input, input:before, input:after {
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+}
+
 html, body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   height: 100%;
