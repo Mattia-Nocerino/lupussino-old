@@ -96,27 +96,11 @@ var vm = new Vue({
             }
         },
         paste_name: function(){
-            // navigator.permissions.query({
-            //     name: 'clipboard-read'
-            //   }).then(permissionStatus => {
-            //     // Will be 'granted', 'denied' or 'prompt':
-            //     console.log(permissionStatus.state);
-              
-            //     // Listen for changes to the permission state
-            //     permissionStatus.onchange = () => {
-            //       console.log(permissionStatus.state);
-            //     };
-            //   });
-            const input = document.querySelector('#player');
-            input.focus();
-            const result = document.execCommand('paste');
-            console.error(result);
-
-            // if (vm.$data.player.name == '') {
-            //     vm.$data.player.name = 'Giocatore 1';
-            // } else {
-            //     vm.$data.player.name = 'Giocatore ' + (parseInt(vm.$data.player.name.replace(/[^\d.]/g, '')) + 1);
-            // }
+            if (vm.$data.player.name == '') {
+                vm.$data.player.name = 'Giocatore 1';
+            } else {
+                vm.$data.player.name = 'Giocatore ' + (parseInt(vm.$data.player.name.replace(/[^\d.]/g, '')) + 1);
+            }
         }
     }
 })
