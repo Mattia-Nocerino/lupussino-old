@@ -10,8 +10,9 @@ html
 
       //-FORM INIZIALE
       div#input-cnt(v-if="!(player.is_online)")
-        input#player(v-model="player.name", type="text", required="true", placeholder="Nickname..." )
-
+        div#paste-name-cnt
+          input#player(v-model="player.name", type="text", required="true", placeholder="Nickname..." )
+          i#paste-name(class="fas fa-paste", @click="paste_name")
         input#room(v-model="room.name", type="text", required="true", placeholder="Stanza..." list="room-list")
 
         datalist#room-list

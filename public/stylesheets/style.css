@@ -64,6 +64,19 @@ html, body {
   width: 100%;
 }
 
+#paste-name-cnt {
+  position: relative;
+}
+
+#paste-name {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 12px;
+  cursor: pointer;
+  background-color: #a9a9a9;
+}
+
 #new-game {
   position: absolute;
   bottom: 50px;
