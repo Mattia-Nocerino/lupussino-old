@@ -40,19 +40,6 @@ api.io = io;
 //     ]}
 // ];
 
-const configurazioni = [
-    null, //0
-    null, //1
-    null, //2
-    ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore"], //3
-    ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //4
-    ["Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //5
-    ["Cittadino", "Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //6
-    null, //7
-    null, //8
-    null, //9
-    null  //10
-];
 var configurazione_attiva = [];
 var esiliate = [];
 
@@ -176,7 +163,7 @@ io.on('connection', function(socket){
         var players_online = room.player_list.filter(x => x.is_online).slice();
         var tot_players = players_online.length;
         
-        configurazione_attiva = configurazioni[tot_players].slice();
+        configurazione_attiva = room.configurazioni[tot_players].slice();
         //ASSEGNAZIONE RUOLI + ESILIATE
         for(var player of players_online){
             var random_item = Math.floor(Math.random() * configurazione_attiva.length);
@@ -237,11 +224,7 @@ io.on('connection', function(socket){
                     }
                     
                     if (altro_assassino == ''){
-                        if (tot_players > 5){
-                            player.role.detail = "Sei un'assassino... ma da solo";
-                        }else{
-                            player.role.detail = "Sei un'assassino";
-                        }
+                        player.role.detail = "Sei un'assassino";
                     } else {
                         player.role.detail = "Sei assassino con " + altro_assassino;
                     }

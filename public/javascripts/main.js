@@ -45,7 +45,8 @@ var vm = new Vue({
             name: '',
             player_list: [],
             mitomane_riconosce_assassini: false,
-            testimoni_si_riconoscono: false
+            testimoni_si_riconoscono: false,
+            configurazioni: []
         },
         errors: {
             player_name_already_in_use: false,
@@ -59,6 +60,12 @@ var vm = new Vue({
         mitomane_riconosce_assassini: false,
         testimoni_si_riconoscono: false,
         role_animation: false
+    },
+    computed: {
+        player_number: function () {
+            // `this` points to the vm instance
+            return this.room.player_list.filter(x => x.is_online).length;
+        }
     },
     methods: {
         room_enter: function(){
@@ -133,10 +140,6 @@ socket.on('room_update', function(data) {
         vm.$data.player.role.detail = ''
     }
 });
-
-//     vm.$data.player.role.name = message.role;
-//     vm.$data.player.role.detail = message.detail;
-// })
 
 socket.on('role', function(message) {
     vm.$data.role_animation = !vm.$data.role_animation;

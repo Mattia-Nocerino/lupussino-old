@@ -5,7 +5,8 @@ class Player {
         this.password = password;
         this.is_owner = false;
         this.is_online = true;
-        this.role = {name: 'In attesa che la partita inizi', detail: ''}
+        this.role = {name: 'In attesa che la partita inizi', detail: ''};
+        this.score = 0;
     }
 
     joinRoom(room){
@@ -20,6 +21,7 @@ class Player {
                 this.setOwnership(room);
                 //prima prendo il vecchio ruolo e lo assegno di nuovo
                 this.role = existing_player.role;
+                this.score = existing_player.score;
 
                 room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
                 room.player_list.push(this);

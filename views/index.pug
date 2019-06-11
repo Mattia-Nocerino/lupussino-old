@@ -33,7 +33,7 @@ html
         div#player-list-cnt(v-bind:class="[(player_list_open) ? 'open':'close']")
           div#player-list-title
             span#setting-toggle(class="fas fa-cog", v-show="player.is_owner", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
-            span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{room.player_list.filter(x => x.is_online).length}}/{{room.player_list.length}}
+            span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{player_number}}/{{room.player_list.length}}
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
           div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
             player(v-bind:name="player.name" v-bind:status="player.is_online" v-bind:owner="player.is_owner" v-bind:key="player.id" v-bind:crown="player.is_owner" v-bind:myself="true")
@@ -48,14 +48,19 @@ html
                   div#detail {{ player.role.detail }}
             div(class="flip-card-back")
 
-        div#new-game(@click="game", v-show="player.is_owner && game_started == false && room.player_list.filter(x => x.is_online).length > 2 && room.player_list.filter(x => x.is_online).length < 7", class="btn") Nuova partita!
+        div#new-game(@click="game", v-show="player.is_owner && game_started == false && player_number > 2 && player_number < 7", class="btn") Nuova partita!
 
       div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#setting-list
+          div(class="setting" v-show="player_number > 2 && player_number < 7") Ruoli attivi:
+            ul
+              li(class="role", v-for="r in room.configurazioni[player_number]") {{ r }}
+
           div(class="setting") Mitomane riconosce Assassini
             label(class="switch")
               input(type="checkbox", v-model="room.mitomane_riconosce_assassini")
               span(class="slider")
+
           div(class="setting") Testimoni si riconoscono
             label(class="switch")
               input(type="checkbox", v-model="room.testimoni_si_riconoscono")

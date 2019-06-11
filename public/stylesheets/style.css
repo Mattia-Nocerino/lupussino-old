@@ -285,6 +285,21 @@ html, body {
     -1px 1px 0 #111,
      1px 1px 0 #111;
   padding: 20px 0;
+  border-top: 1px solid #fff;
+}
+
+.setting:last-child {
+  border-bottom: 1px solid #fff;
+}
+
+.setting ul {
+  margin-top: 10px;
+  margin-left: 20px;
+  font-size: 13px;
+  font-weight: normal;
+  max-height: 50px;
+  display: block;
+  overflow-y: scroll;
 }
 
 #save-setting {
