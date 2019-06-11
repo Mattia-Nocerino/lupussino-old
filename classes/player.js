@@ -1,7 +1,8 @@
 class Player {
-    constructor(id, name){
+    constructor(id, name, password){
         this.id = id;
         this.name = name;
+        this.password = password;
         this.is_owner = false;
         this.is_online = true;
         this.role = {name: 'In attesa che la partita inizi', detail: ''}
@@ -15,13 +16,17 @@ class Player {
             room.player_list.push(this);
             return 0;
         } else if (!existing_player.is_online) {//riconnesso, rimuovi e riaggiungi
-            this.setOwnership(room);
-            //prima prendo il vecchio ruolo e lo assegno di nuovo
-            this.role = existing_player.role;
+            if (existing_player.password == this.password) {//check password
+                this.setOwnership(room);
+                //prima prendo il vecchio ruolo e lo assegno di nuovo
+                this.role = existing_player.role;
 
-            room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
-            room.player_list.push(this);
-            return 1;
+                room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
+                room.player_list.push(this);
+                return 1;
+            } else {
+                return -2; //password sbagliata! furbetto di merda scoppiato
+            }
         } else {//nome già utilizzato!
             return -1;
         }

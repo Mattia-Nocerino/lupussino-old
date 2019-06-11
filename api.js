@@ -91,8 +91,9 @@ io.on('connection', function(socket){
 
     socket.on('room_enter', function(data, callback){
         var new_room = room_list.find(x => x.name == data.room.name);
-        var new_player = new Player(socket.id, data.player.name);
+        var new_player = new Player(socket.id, data.player.name, data.player.password);
         var player_name_already_in_use = false;
+        var wrong_password = false;
 
         if (new_room == undefined){//creazione stanza
             new_room = new Room(data.room.name);
@@ -102,6 +103,9 @@ io.on('connection', function(socket){
 
         if (new_player.joinRoom(new_room) == -1){
             player_name_already_in_use = true;
+            new_player.is_online = false;
+        } else if (new_player.joinRoom(new_room) == -2) {
+            wrong_password = true;
             new_player.is_online = false;
         } else {
             socket.join(new_room.name);
@@ -113,7 +117,8 @@ io.on('connection', function(socket){
         callback({
             player: new_player,
             errors: {
-                player_name_already_in_use: player_name_already_in_use
+                player_name_already_in_use: player_name_already_in_use,
+                wrong_password: wrong_password
             }
         });
         // console.log(room_list);
@@ -242,7 +247,6 @@ io.on('connection', function(socket){
                     }
                     break;
             }
-            console.log(player);
             io.to(`${player.id}`).emit('role', player);
         });
     });

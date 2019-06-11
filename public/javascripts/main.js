@@ -24,6 +24,7 @@ Vue.component('player', {
 })
 
 var name = getCookie('name');
+var password = getCookie('password');
 
 var vm = new Vue({
     el: '#app',
@@ -32,6 +33,7 @@ var vm = new Vue({
         player: {
             id: '',
             name: name,
+            password: password,
             is_owner: false,
             is_online: false,
             role: {
@@ -48,7 +50,7 @@ var vm = new Vue({
         errors: {
             player_name_already_in_use: false,
             missing_login_data: false,
-            invalid_player_number: false
+            wrong_password: false
         },
         game_started: false,
         player_list_open: true,
@@ -63,7 +65,9 @@ var vm = new Vue({
                 vm.$data.errors.missing_login_data = false;
                 socket.emit('room_enter', vm.$data, function(data){
                     setCookie('name', vm.$data.player.name, 14);
+                    setCookie('password', vm.$data.player.password, 14);
                     vm.$data.errors.player_name_already_in_use = data.errors.player_name_already_in_use;
+                    vm.$data.errors.wrong_password = data.errors.wrong_password;
                     vm.$data.player = data.player;
                 });
             }else{

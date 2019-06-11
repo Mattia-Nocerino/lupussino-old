@@ -67,11 +67,22 @@ html, body {
   padding: 0 5%;
 }
 
-#player, #room, #enter {
+.label {
+  text-align: left;
+  font-style: italic;
+}
+
+#player, #room, #enter, #password {
   display: block;
-  margin: 20px 0;
+  margin-bottom: 30px;
   padding: 10px;
   width: 100%;
+}
+
+.error {
+  font-weight: bold;
+  color: #d01818;
+  font-style: italic;
 }
 
 #new-game {
