@@ -4,7 +4,7 @@ class Player {
         this.name = name;
         this.is_owner = false;
         this.is_online = true;
-        this.role = '';
+        this.role = {name: 'In attesa che la partita inizi', detail: ''}
     }
 
     joinRoom(room){
@@ -16,6 +16,9 @@ class Player {
             return 0;
         } else if (!existing_player.is_online) {//riconnesso, rimuovi e riaggiungi
             this.setOwnership(room);
+            //prima prendo il vecchio ruolo e lo assegno di nuovo
+            this.role = existing_player.role;
+
             room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
             room.player_list.push(this);
             return 1;

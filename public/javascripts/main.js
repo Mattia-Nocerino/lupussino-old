@@ -33,10 +33,11 @@ var vm = new Vue({
             id: '',
             name: name,
             is_owner: false,
-            is_online: false//,
-            // role: {
-            //     name: 'In attesa che la partita inizi'
-            // }
+            is_online: false,
+            role: {
+                name: '',
+                detail: ''
+            }
         },
         room: {
             name: '',
@@ -49,8 +50,6 @@ var vm = new Vue({
             missing_login_data: false,
             invalid_player_number: false
         },
-        role: 'In attesa che la partita inizi',
-        detail: '',
         game_started: false,
         player_list_open: true,
         card_face_up: true,
@@ -125,18 +124,17 @@ socket.on('room_update', function(data) {
     } else {
         //giocatore kickato!
         vm.$data.player.is_online = false
-        vm.$data.role = 'In attesa che la partita inizi'
-        vm.$data.detail = ''
+        vm.$data.player.role.name = 'In attesa che la partita inizi'
+        vm.$data.player.role.detail = ''
     }
 });
 
-//     vm.$data.role = message.role;
-//     vm.$data.detail = message.detail;
+//     vm.$data.player.role.name = message.role;
+//     vm.$data.player.role.detail = message.detail;
 // })
 
 socket.on('role', function(message) {
-    vm.$data.role = message.role;
-    vm.$data.detail = message.detail;
+    vm.$data.player = message;
 });
 
 function setCookie(name,value,days) {

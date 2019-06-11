@@ -80,7 +80,6 @@ io.on('connection', function(socket){
     socket.on('kick', function(room_name, kicked_player){
         var room = room_list.find(x => x.name == room_name);
         var player = room.player_list.find(x => x.name == kicked_player);
-        var leaving_socket;
         if (player != undefined){
             room.player_list = room.player_list.filter(x => x.name != kicked_player);
             io.to(room.name).emit('room_update', {room: room});
@@ -157,85 +156,95 @@ io.on('connection', function(socket){
     socket.on('game', function(data, callback){
         //CARICAMENTO CONFIGURAZIONE
         var room = room_list.find(x => x.name == data.room.name);
+
+        //rimozione utenti offline
+        var players_offline = room.player_list.filter(x => !x.is_online).slice();
+        players_offline.forEach(player => {
+            room.player_list = room.player_list.filter(x => x.name != player.name);
+            io.to(room.name).emit('room_update', {room: room});
+            if (io.sockets.sockets[player.id] != undefined){
+                io.sockets.sockets[player.id].leave(room.name);
+            }
+        });
+
+
         var players_online = room.player_list.filter(x => x.is_online).slice();
         var tot_players = players_online.length;
-        if (tot_players >= 3) {
-            configurazione_attiva = configurazioni[tot_players].slice();
-            //ASSEGNAZIONE RUOLI + ESILIATE
-            for(var player of players_online){
-                var random_item = Math.floor(Math.random() * configurazione_attiva.length);
-                player.role = configurazione_attiva[random_item];
-                configurazione_attiva.splice(random_item, 1);
-            }
-            var esiliate = configurazione_attiva;
-            var assassini = players_online.filter(x => x.role == 'Assassino').slice();
-
-            // console.log(players_online);
-            // console.log(assassini);
-
-            players_online.forEach(player => {
-                var altro_testimone = '';
-                var altro_assassino = '';
-
-                switch(player.role){
-                    case "Cittadino":
-                        detail = "Sei un semplice cittadino in una città piena di assassini... guardati le spalle";
-                        break;
-                    case "Investigatore":
-                        detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
-                        break;
-                    case "Investigatrice":
-                        detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
-                        break;
-                    case "Testimone":
-                        for(var t of players_online){
-                            if (t.role == 'Testimone' && t.name != player.name){
-                                altro_testimone = t.name;
-                            }
-                        }
-                        
-                        if (altro_testimone == ''){
-                            detail = "Sei il testimone... ma da solo";
-                        } else {
-                            if (room.testimoni_si_riconoscono){
-                                detail = "Sei testimone con " + altro_testimone;
-                            } else {
-                                detail = "Sei testimone insieme a qualcun altro!";
-                            }
-                        }
-                        break;
-                    case "Mitomane":
-                        if (room.mitomane_riconosce_assassini){
-                            if (assassini.length == 2) detail = "Sei il mitomane e gli assassini sono " + assassini[0].name + " e " + assassini[1].name;
-                            if (assassini.length == 1) detail = "Sei il mitomane e l'assassino è " + assassini[0].name;
-                            if (assassini.length == 0) detail = "Sei il mitomane e non ci sono assassini in giro ad aiutarti";
-                        } else {
-                            detail = "Mitomane, fatti votare (bastardo!)";
-                        }
-                        break;
-                    case "Assassino":
-                        for(var a of players_online){
-                            if (a.role == 'Assassino' && a.name != player.name){
-                                altro_assassino = a.name;
-                            }
-                        }
-                        
-                        if (altro_assassino == ''){
-                            if (tot_players > 5){
-                                detail = "Sei un'assassino... ma da solo";
-                            }else{
-                                detail = "Sei un'assassino";
-                            }
-                        } else {
-                            detail = "Sei assassino con " + altro_assassino;
-                        }
-                        break;
-                }
-                io.to(`${player.id}`).emit('role', {role: player.role, detail: detail});
-            });
-            // console.log(esiliate);
-            //rispondo ai client
+        
+        configurazione_attiva = configurazioni[tot_players].slice();
+        //ASSEGNAZIONE RUOLI + ESILIATE
+        for(var player of players_online){
+            var random_item = Math.floor(Math.random() * configurazione_attiva.length);
+            player.role.name = configurazione_attiva[random_item];
+            configurazione_attiva.splice(random_item, 1);
         }
+        var esiliate = configurazione_attiva;
+        var assassini = players_online.filter(x => x.role.name == 'Assassino').slice();
+
+        // console.log(players_online);
+        // console.log(assassini);
+
+        players_online.forEach(player => {
+            var altro_testimone = '';
+            var altro_assassino = '';
+
+            switch(player.role.name){
+                case "Cittadino":
+                    player.role.detail = "Sei un semplice cittadino in una città piena di assassini... guardati le spalle";
+                    break;
+                case "Investigatore":
+                    player.role.detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
+                    break;
+                case "Investigatrice":
+                    player.role.detail = "Hai veggiato nel mezzo: " + esiliate[Math.floor(Math.random() * esiliate.length)];
+                    break;
+                case "Testimone":
+                    for(var t of players_online){
+                        if (t.role.name == 'Testimone' && t.name != player.name){
+                            altro_testimone = t.name;
+                        }
+                    }
+                    
+                    if (altro_testimone == ''){
+                        player.role.detail = "Sei il testimone... ma da solo";
+                    } else {
+                        if (room.testimoni_si_riconoscono){
+                            player.role.detail = "Sei testimone con " + altro_testimone;
+                        } else {
+                            player.role.detail = "Sei testimone insieme a qualcun altro!";
+                        }
+                    }
+                    break;
+                case "Mitomane":
+                    if (room.mitomane_riconosce_assassini){
+                        if (assassini.length == 2) player.role.detail = "Sei il mitomane e gli assassini sono " + assassini[0].name + " e " + assassini[1].name;
+                        if (assassini.length == 1) player.role.detail = "Sei il mitomane e l'assassino è " + assassini[0].name;
+                        if (assassini.length == 0) player.role.detail = "Sei il mitomane e non ci sono assassini in giro ad aiutarti";
+                    } else {
+                        player.role.detail = "Mitomane, fatti votare (bastardo!)";
+                    }
+                    break;
+                case "Assassino":
+                    for(var a of players_online){
+                        if (a.role.name == 'Assassino' && a.name != player.name){
+                            altro_assassino = a.name;
+                        }
+                    }
+                    
+                    if (altro_assassino == ''){
+                        if (tot_players > 5){
+                            player.role.detail = "Sei un'assassino... ma da solo";
+                        }else{
+                            player.role.detail = "Sei un'assassino";
+                        }
+                    } else {
+                        player.role.detail = "Sei assassino con " + altro_assassino;
+                    }
+                    break;
+            }
+            console.log(player);
+            io.to(`${player.id}`).emit('role', player);
+        });
     });
 });
 
