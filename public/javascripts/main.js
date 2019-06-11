@@ -58,6 +58,7 @@ var vm = new Vue({
         setting_window_open: false,
         mitomane_riconosce_assassini: false,
         testimoni_si_riconoscono: false,
+        role_animation: false
     },
     methods: {
         room_enter: function(){
@@ -138,6 +139,7 @@ socket.on('room_update', function(data) {
 // })
 
 socket.on('role', function(message) {
+    vm.$data.role_animation = !vm.$data.role_animation;
     vm.$data.player = message;
 });
 

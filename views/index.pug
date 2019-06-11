@@ -42,9 +42,10 @@ html
         div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
             div(class="flip-card-front")
-              div#role-description-cnt
-                div#role {{ player.role.name }}
-                div#detail {{ player.role.detail }}
+              transition(name="slide-fade", mode="out-in")
+                div#role-description-cnt(:key="role_animation")
+                  div#role {{ player.role.name }}
+                  div#detail {{ player.role.detail }}
             div(class="flip-card-back")
 
         div#new-game(@click="game", v-show="player.is_owner && game_started == false && room.player_list.filter(x => x.is_online).length > 2 && room.player_list.filter(x => x.is_online).length < 7", class="btn") Nuova partita!
