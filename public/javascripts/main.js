@@ -94,13 +94,6 @@ var vm = new Vue({
             } else { //chiudi normalmente
                 vm.$data.setting_window_open = false;
             }
-        },
-        paste_name: function(){
-            if (vm.$data.player.name == '') {
-                vm.$data.player.name = 'Giocatore 1';
-            } else {
-                vm.$data.player.name = 'Giocatore ' + (parseInt(vm.$data.player.name.replace(/[^\d.]/g, '')) + 1);
-            }
         }
     }
 })
