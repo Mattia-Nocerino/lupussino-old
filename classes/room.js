@@ -6,6 +6,8 @@ class Room {
         this.player_list = [];
         this.mitomane_riconosce_assassini = false;
         this.testimoni_si_riconoscono = false;
+        this.game_started = false,
+        this.vote_ended = false,
         //this.cards = [];
         this.configurazioni = [
             [""], //0

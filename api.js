@@ -67,8 +67,28 @@ io.on('connection', function(socket){
     socket.on('kick', function(room_name, kicked_player){
         var room = room_list.find(x => x.name == room_name);
         var player = room.player_list.find(x => x.name == kicked_player);
+        var annulla_game = false;
         if (player != undefined){
+
+            if (player.is_online && player.role.name != 'In attesa che la partita inizi') {//check se kickato un giocatore in gioco (stupido admin)
+                annulla_game = true;
+            }
             room.player_list = room.player_list.filter(x => x.name != kicked_player);
+
+            if (room.player_list.length <= 2){//check se giocatori rimasti >= 3
+                annulla_game = true;
+            }
+
+            if (annulla_game == true && room.game_started == true) {
+                //in tali casi, game annullato, ripristina ruoli default
+                room.game_started = false;
+                room.player_list.forEach(player => {
+                    player.role.name = 'In attesa che la partita inizi';
+                    player.role.detail = '';
+                    io.to(`${player.id}`).emit('role', player);
+                });
+            }
+
             io.to(room.name).emit('room_update', {room: room});
             if (io.sockets.sockets[player.id] != undefined){
                 io.sockets.sockets[player.id].leave(room.name);
@@ -148,17 +168,17 @@ io.on('connection', function(socket){
     socket.on('game', function(data, callback){
         //CARICAMENTO CONFIGURAZIONE
         var room = room_list.find(x => x.name == data.room.name);
+        room.game_started = true;
 
         //rimozione utenti offline
         var players_offline = room.player_list.filter(x => !x.is_online).slice();
         players_offline.forEach(player => {
             room.player_list = room.player_list.filter(x => x.name != player.name);
-            io.to(room.name).emit('room_update', {room: room});
             if (io.sockets.sockets[player.id] != undefined){
                 io.sockets.sockets[player.id].leave(room.name);
             }
         });
-
+        io.to(room.name).emit('room_update', {room: room});
 
         var players_online = room.player_list.filter(x => x.is_online).slice();
         var tot_players = players_online.length;

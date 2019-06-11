@@ -9,10 +9,10 @@ Vue.component('room', {
 })
 
 Vue.component('player', {
-    props: ['name', 'status', 'owner', 'crown', 'myself'],
+    props: ['name', 'score', 'status', 'owner', 'crown', 'myself'],
     template: '<div class="player" v-bind:class="[(myself) ? \'myself\' : \'\']">' + 
                     '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
-                    '{{name}}' + 
+                    '{{name}} - {{score}}' + 
                     '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner && !myself"></span>' + 
                     '<span class="crown fas fa-crown" v-show="crown"></span>' + 
               '</div>',
@@ -36,8 +36,11 @@ var vm = new Vue({
             password: password,
             is_owner: false,
             is_online: false,
+            has_voted: false,
+            player_voted: '',
+            score: 0,
             role: {
-                name: '',
+                name: 'In attesa che la partita inizi',
                 detail: ''
             }
         },
@@ -46,14 +49,15 @@ var vm = new Vue({
             player_list: [],
             mitomane_riconosce_assassini: false,
             testimoni_si_riconoscono: false,
-            configurazioni: []
+            configurazioni: [],
+            game_started: false,
+            vote_ended: false
         },
         errors: {
             player_name_already_in_use: false,
             missing_login_data: false,
             wrong_password: false
         },
-        game_started: false,
         player_list_open: true,
         card_face_up: true,
         setting_window_open: false,
@@ -65,6 +69,13 @@ var vm = new Vue({
         player_number: function () {
             // `this` points to the vm instance
             return this.room.player_list.filter(x => x.is_online).length;
+        },
+        vote_text: function () {
+            if (this.player.has_voted){
+                return "Annulla voto";
+            } else {
+                return "Conferma voto";
+            }
         }
     },
     methods: {
@@ -83,8 +94,20 @@ var vm = new Vue({
             }
         },
         game: function(){
+            if (!vm.$data.room.vote_ended && vm.$data.room.game_started){
+                if (!confirm("È ancora in corso una partita. Sicuro di volerne iniziare un'altra?")){
+                    return;
+                }
+            }
             socket.emit('game', vm.$data);
-            vm.$data.game_started = false;
+        },
+        vote: function(){
+            if (vm.$data.player.player_voted == "") {
+                alert("Seleziona un giocatore valido prima di effettuare una votazione");
+            } else {
+                vm.$data.player.has_voted = !vm.$data.player.has_voted;
+            }
+            //TODO LATO SERVER VOTAZIONE PIU' CALCOLO
         },
         update_settings: function(){
             socket.emit('update_settings', vm.$data);

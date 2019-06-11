@@ -45,12 +45,16 @@ html, body {
   transform: translateY(2px);
 }
 
+.btn.annulla {
+  background-color: #d01818
+}
+
 .online {
   color: #4CAF50;
 }
 
 .offline {
-  color: #dc0001;
+  color: #d01818;
 }
 
 #app {
@@ -243,6 +247,38 @@ html, body {
   background-color: #2980b9;
   transform: rotateY(180deg);
   z-index: 1;
+}
+
+#votazione {
+  margin-top: 40px;
+  text-align: left; 
+}
+
+#votazione select {
+    display: inline-block;
+    padding: 10px;
+    width: 40%;
+}
+
+#votazione .btn{
+  float: right;
+}
+
+#vote-detail {
+  text-align: right;
+  font-style: italic;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+select:required:invalid {
+  color: gray;
+}
+option[value=""][disabled] {
+  display: none;
+}
+option {
+  color: black;
 }
 
 .blur {

@@ -5,6 +5,8 @@ class Player {
         this.password = password;
         this.is_owner = false;
         this.is_online = true;
+        this.has_voted = false;
+        this.player_voted = '';
         this.role = {name: 'In attesa che la partita inizi', detail: ''};
         this.score = 0;
     }
@@ -22,6 +24,8 @@ class Player {
                 //prima prendo il vecchio ruolo e lo assegno di nuovo
                 this.role = existing_player.role;
                 this.score = existing_player.score;
+                this.has_voted = existing_player.has_voted;
+                this.player_voted = existing_player.player_voted;
 
                 room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
                 room.player_list.push(this);

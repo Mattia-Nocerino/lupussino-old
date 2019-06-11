@@ -5,6 +5,7 @@ html
     title Lupussino online!
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/all.min.css')
+
   body
     div#app
 
@@ -36,8 +37,8 @@ html
             span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{player_number}}/{{room.player_list.length}}
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
           div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
-            player(v-bind:name="player.name" v-bind:status="player.is_online" v-bind:owner="player.is_owner" v-bind:key="player.id" v-bind:crown="player.is_owner" v-bind:myself="true")
-            player(v-for="p in room.player_list" v-if="p.name!=player.name" v-bind:name="p.name" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner" v-bind:myself="player.id==p.id")
+            player(v-bind:name="player.name" v-bind:score="player.score" v-bind:status="player.is_online" v-bind:owner="player.is_owner" v-bind:key="player.id" v-bind:crown="player.is_owner" v-bind:myself="true")
+            player(v-for="p in room.player_list" v-if="p.name!=player.name" v-bind:name="p.name" v-bind:score="p.score" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner" v-bind:myself="player.id==p.id")
 
         div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
@@ -48,7 +49,17 @@ html
                   div#detail {{ player.role.detail }}
             div(class="flip-card-back")
 
-        div#new-game(@click="game", v-show="player.is_owner && game_started == false && player_number > 2 && player_number < 7", class="btn") Nuova partita!
+        div#votazione(v-show="player_number > 2 && player_number < 7 && room.game_started && !room.vote_ended")
+          select(v-model="player.player_voted")
+            option(disabled selected value="") Votazione...
+            option(value="Cielo") Cielo
+            option(v-for="p in room.player_list.filter(x => x.name!=player.name)" v-if="p.name!=player.name" value="p.name") {{p.name}}
+          div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
+          div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.length}}
+
+        div#new-game(@click="game", v-show="player.is_owner && player_number > 2 && player_number < 7", class="btn") Nuova partita!
+          
+
 
       div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#setting-list
