@@ -106,6 +106,7 @@ var vm = new Vue({
                 alert("Seleziona un giocatore valido prima di effettuare una votazione");
             } else {
                 vm.$data.player.has_voted = !vm.$data.player.has_voted;
+                socket.emit('vote', vm.$data);
             }
             //TODO LATO SERVER VOTAZIONE PIU' CALCOLO
         },

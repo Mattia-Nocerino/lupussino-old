@@ -141,6 +141,24 @@ io.on('connection', function(socket){
         io.to(room.name).emit('room_update', {room: room});
     });
 
+    socket.on('vote', function(data, callback){
+        var room = room_list.find(x => x.name == data.room.name);
+        var player = room.player_list.find(x => x.name == data.player.name);
+        
+        player.has_voted = data.player.has_voted;
+        if(player.has_voted) {
+            player.player_voted = data.player.player_voted;
+        } else {
+            player.player_voted = '';
+        }
+
+        if (room.player_list.length == room.player_list.filter(x => x.has_voted).length){
+            console.log("calcolo punteggio finale");
+        }
+
+        io.to(room.name).emit('room_update', {room: room});
+    });
+
     //NUOVA FUNZIONE (DA CONTINUARE)
     // socket.on('new_game', function(data){
     //     var room = room_list.find(x => x.name == data.room.name);
