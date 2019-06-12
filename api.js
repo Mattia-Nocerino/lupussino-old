@@ -152,52 +152,117 @@ io.on('connection', function(socket){
             player.player_voted = '';
         }
 
-        if (room.player_list.length == room.player_list.filter(x => x.has_voted).length){
+        if (room.player_list.filter(x => x.role.detail!='').length == room.player_list.filter(x => x.has_voted).length){
             console.log("calcolo punteggio finale");
             room.game_started = false;
             room.vote_ended = true;
             //set has_voted = false to all
-            room.player_list.forEach(player => {
-                player.has_voted = false;
-            });
-            
+            // room.player_list.forEach(player => {
+            //     player.has_voted = false;
+            // });
         }
 
         io.to(room.name).emit('room_update', {room: room});
 
         if (room.game_started == false && room.vote_ended == true) {
-            room.player_list
+            var bonus = false;
+            var tot_voti = 0;
+            var tot_non_voti = 0;
+            var player_voted;
+
+            var bonus_totale_assassini = true;
+            var bonus_totale_mitomane = true;
+            var bonus_totale_buoni = true;
+            room.player_list.filter(x => x.role.detail!='').forEach(player => {
+                if (player.role.name != 'Assassino' && player.role.name != 'Mitomane'){//Calcolo per buoni
+                    if (player.player_voted == 'Cielo'){//Se voto al cielo controllo per assassini in gioco
+                        if (room.player_list.filter(x => x.role.name == 'Assassino').length == 0){
+                            bonus = true;
+                        } else {
+                            bonus = false;
+                            bonus_totale_buoni = false;
+                        }
+                    } else {//Se il voto non è al cielo controllo il ruolo del giocatore votato
+                        player_voted = room.player_list.find(x => x.name == player.player_voted);
+                        if(player_voted.role.name != 'Assassino' && player_voted.role.name == 'Mitomane'){
+                            bonus = false;
+                            bonus_totale_buoni = false;
+                        } else {
+                            bonus = true;
+                        }
+                    }
+                } else {//Se sei un cattivo conto in quanti ti hanno votato e in quanti invece no
+                    tot_voti     = room.player_list.filter(x => x.player_voted == player.name && x.role.name != 'Assassino' && x.role.name != 'Mitomane').length;
+                    tot_non_voti = room.player_list.filter(x => x.player_voted != player.name && x.role.name != 'Assassino' && x.role.name != 'Mitomane').length;
+
+                    if (tot_voti != 0 && player.role.name == 'Assassino'){
+                        bonus_totale_assassini = false;
+                    }
+
+                    if (tot_non_voti > 0 && player.role.name == 'Mitomane'){
+                        bonus_totale_mitomane = false;
+                    }
+                }
+
+                switch(player.role.name){
+                    case "Cittadino":
+                        player.score = player.score + (bonus ? +3 : -1);
+                        break;
+                    case "Testimone":
+                        player.score = player.score + (bonus ? +2 : -2);
+                        break;
+                    case "Investigatore":
+                    case "Investigatrice":
+                        player.score = player.score + (bonus ? +2 : -3);
+                        break;
+                    case "Assassino":
+                        player.score = player.score + (tot_non_voti) - (tot_voti);
+                        break;
+                    case "Mitomane":
+                        player.score = player.score + (tot_voti * 2) - (tot_non_voti);
+                        break;
+                }
+            });
+            room.player_list.filter(x => x.role.detail!='').forEach(player => {//Assegnazione super bonus
+                switch(player.role.name){
+                    case "Cittadino":
+                        player.score = player.score + (bonus_totale_buoni ? +2 : 0);
+                        break;
+                    case "Testimone":
+                        player.score = player.score + (bonus_totale_buoni ? +2 : 0);
+                        break;
+                    case "Investigatore":
+                    case "Investigatrice":
+                        player.score = player.score + (bonus_totale_buoni ? +1 : 0);
+                        break;
+                    case "Assassino":
+                        player.score = player.score + (bonus_totale_buoni ? +2 : 0);
+                        break;
+                    case "Mitomane":
+                        player.score = player.score + (bonus_totale_buoni ? +2 : 0);
+                        break;
+                }
+            });
+
+            io.to(room.name).emit('room_update', {room: room});
+
+            room.player_list.filter(x => x.role.detail!='').forEach(player => {
+                //partita finita, resetto i ruoli
+                player.role.name = 'In attesa che la partita inizi';
+                player.role.detail = '';
+                io.to(`${player.id}`).emit('role', player);
+            });
+
+            io.to(room.name).emit('reveal_roles');
         }
     });
 
-    //NUOVA FUNZIONE (DA CONTINUARE)
-    // socket.on('new_game', function(data){
-    //     var room = room_list.find(x => x.name == data.room.name);
-    //     var invalid_player_number = false;
-
-    //     room.cards = configuration.find(x => x.players == room.player_number).cards;
-
-    //     if (room.cards == undefined) {
-    //         invalid_player_number = true;
-    //     } else {
-    //         room.gameStart();
-    //     }
-
-    //     io.to(room.name).emit('update', {
-    //         room: room
-    //         // ,
-    //         // errors: {
-    //         //     invalid_player_number: invalid_player_number
-    //         // }
-    //     });
-    // })
-
-
-    //VECCHIA MERDA CASINO BLEAAAAH
+    
     socket.on('game', function(data, callback){
         //CARICAMENTO CONFIGURAZIONE
         var room = room_list.find(x => x.name == data.room.name);
         room.game_started = true;
+        room.vote_ended = false;
 
         //rimozione utenti offline
         var players_offline = room.player_list.filter(x => !x.is_online).slice();
@@ -207,7 +272,6 @@ io.on('connection', function(socket){
                 io.sockets.sockets[player.id].leave(room.name);
             }
         });
-        io.to(room.name).emit('room_update', {room: room});
 
         var players_online = room.player_list.filter(x => x.is_online).slice();
         var tot_players = players_online.length;
@@ -226,6 +290,8 @@ io.on('connection', function(socket){
         // console.log(assassini);
 
         players_online.forEach(player => {
+            player.has_voted = false;
+            player.player_voted = "";
             var altro_testimone = '';
             var altro_assassino = '';
 
@@ -281,6 +347,7 @@ io.on('connection', function(socket){
             }
             io.to(`${player.id}`).emit('role', player);
         });
+        io.to(room.name).emit('room_update', {room: room});
     });
 });
 

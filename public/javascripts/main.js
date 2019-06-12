@@ -12,7 +12,7 @@ Vue.component('player', {
     props: ['name', 'score', 'status', 'owner', 'crown', 'myself'],
     template: '<div class="player" v-bind:class="[(myself) ? \'myself\' : \'\']">' + 
                     '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
-                    '{{name}} - {{score}}' + 
+                    '{{name}} | {{score}}' + 
                     '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner && !myself"></span>' + 
                     '<span class="crown fas fa-crown" v-show="crown"></span>' + 
               '</div>',
@@ -153,10 +153,12 @@ socket.on('room_list', function(data) {
 });
 
 socket.on('room_update', function(data) {
+    old_vote = vm.$data.player.player_voted;
     vm.$data.room = data.room;
 
     if (data.room.player_list.find(x => x.name == vm.$data.player.name) != undefined){
         vm.$data.player = data.room.player_list.find(x => x.name == vm.$data.player.name);
+        vm.$data.player.player_voted = old_vote;
     } else {
         //giocatore kickato!
         vm.$data.player.is_online = false
@@ -169,6 +171,19 @@ socket.on('role', function(message) {
     vm.$data.role_animation = !vm.$data.role_animation;
     vm.$data.player = message;
 });
+
+socket.on('reveal_roles', function() {
+    alert_string = "Partita conclusa!\n\n";
+    vm.$data.room.player_list.filter(x => x.role.detail!='').forEach(p => {
+        if(p.name == vm.$data.player.name){
+            alert_string += "Tu eri: " + p.role.name + " e hai votato: " + p.player_voted + "\n";
+        } else {
+            alert_string += p.name + " era: " + p.role.name + " e ha votato: " + p.player_voted + "\n";
+        }
+    });
+
+    alert(alert_string);
+})
 
 function setCookie(name,value,days) {
     var expires = "";

@@ -14,7 +14,7 @@ class Player {
     joinRoom(room){
         var existing_player = room.player_list.find(x => x.name == this.name);
 
-        if (existing_player == undefined){ //nuovo giocatore, inserire!
+        if (existing_player == undefined && this.name.toLowerCase() != 'cielo'){ //nuovo giocatore, inserire!
             this.setOwnership(room);
             room.player_list.push(this);
             return 0;
