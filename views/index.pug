@@ -52,8 +52,8 @@ html
         div#votazione(v-show="player_number > 2 && player_number < 7 && room.game_started && !room.vote_ended")
           select(v-model="player.player_voted")
             option(disabled selected value="") Votazione...
-            option(value="Cielo") Cielo
-            option(v-for="p in room.player_list.filter(x => x.name!=player.name)" v-if="p.name!=player.name" value="p.name") {{p.name}}
+            option Cielo
+            option(v-for="p in room.player_list.filter(x => x.name!=player.name)" v-if="p.name!=player.name") {{p.name}}
           div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
           div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.length}}
 

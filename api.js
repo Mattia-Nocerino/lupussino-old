@@ -154,9 +154,20 @@ io.on('connection', function(socket){
 
         if (room.player_list.length == room.player_list.filter(x => x.has_voted).length){
             console.log("calcolo punteggio finale");
+            room.game_started = false;
+            room.vote_ended = true;
+            //set has_voted = false to all
+            room.player_list.forEach(player => {
+                player.has_voted = false;
+            });
+            
         }
 
         io.to(room.name).emit('room_update', {room: room});
+
+        if (room.game_started == false && room.vote_ended == true) {
+            room.player_list
+        }
     });
 
     //NUOVA FUNZIONE (DA CONTINUARE)
