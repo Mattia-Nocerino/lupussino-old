@@ -57,13 +57,13 @@ html
           div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
           div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='').length}}
 
-        div#new-game(@click="game", v-show="player.is_owner && player_number > 2 && player_number < 7", class="btn") Nuova partita!
+        div#new-game(@click="game", v-show="player.is_owner && player_number > 2 && player_number < 9", class="btn") Nuova partita!
           
 
 
       div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#setting-list
-          div(class="setting" v-show="player_number > 2 && player_number < 7") Ruoli attivi:
+          div(class="setting" v-show="player_number > 2 && player_number < 9") Ruoli attivi:
             ul
               li(class="role", v-for="r in room.configurazioni[player_number]") {{ r }}
 

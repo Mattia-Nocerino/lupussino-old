@@ -310,7 +310,7 @@ io.on('connection', function(socket){
                 case "Testimone":
                     for(var t of players_online){
                         if (t.role.name == 'Testimone' && t.name != player.name){
-                            altro_testimone = t.name;
+                            altro_testimone += t.name + " - ";
                         }
                     }
                     
@@ -318,7 +318,7 @@ io.on('connection', function(socket){
                         player.role.detail = "Sei il testimone... ma da solo";
                     } else {
                         if (room.testimoni_si_riconoscono){
-                            player.role.detail = "Sei testimone con " + altro_testimone;
+                            player.role.detail = "Sei testimone con " + altro_testimone.slice(0, -3);
                         } else {
                             player.role.detail = "Sei testimone insieme a qualcun altro!";
                         }
@@ -326,6 +326,7 @@ io.on('connection', function(socket){
                     break;
                 case "Mitomane":
                     if (room.mitomane_riconosce_assassini){
+                        if (assassini.length == 3) player.role.detail = "Sei il mitomane e gli assassini sono " + assassini[0].name + ", "  + assassini[1].name + " e " + assassini[2].name;
                         if (assassini.length == 2) player.role.detail = "Sei il mitomane e gli assassini sono " + assassini[0].name + " e " + assassini[1].name;
                         if (assassini.length == 1) player.role.detail = "Sei il mitomane e l'assassino è " + assassini[0].name;
                         if (assassini.length == 0) player.role.detail = "Sei il mitomane e non ci sono assassini in giro ad aiutarti";
@@ -336,14 +337,14 @@ io.on('connection', function(socket){
                 case "Assassino":
                     for(var a of players_online){
                         if (a.role.name == 'Assassino' && a.name != player.name){
-                            altro_assassino = a.name;
+                            altro_assassino += a.name + " - ";
                         }
                     }
                     
                     if (altro_assassino == ''){
                         player.role.detail = "Sei un'assassino";
                     } else {
-                        player.role.detail = "Sei assassino con " + altro_assassino;
+                        player.role.detail = "Sei assassino con " + altro_assassino.slice(0, -3);
                     }
                     break;
             }

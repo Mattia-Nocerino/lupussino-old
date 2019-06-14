@@ -6,9 +6,8 @@ class Room {
         this.player_list = [];
         this.mitomane_riconosce_assassini = false;
         this.testimoni_si_riconoscono = false;
-        this.game_started = false,
-        this.vote_ended = false,
-        //this.cards = [];
+        this.game_started = false;
+        this.vote_ended = false;
         this.configurazioni = [
             [""], //0
             [""], //1
@@ -17,8 +16,8 @@ class Room {
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //4
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //5
             ["Cittadino", "Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //6
-            [""], //7
-            [""], //8
+            ["Cittadino", "Cittadino", "Testimone", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //7
+            ["Cittadino", "Cittadino", "Testimone", "Testimone", "Testimone", "Assassino", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //8
             [""], //9
             [""]  //10
         ];
