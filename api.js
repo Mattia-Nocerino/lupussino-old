@@ -238,10 +238,10 @@ io.on('connection', function(socket){
                         player.score += (bonus_totale_buoni ? +1 : 0);
                         break;
                     case "Assassino":
-                        player.score += (bonus_totale_buoni ? +2 : 0);
+                        player.score += (bonus_totale_assassini ? +2 : 0);
                         break;
                     case "Mitomane":
-                        player.score += (bonus_totale_buoni ? +2 : 0);
+                        player.score += (bonus_totale_mitomane ? +2 : 0);
                         break;
                 }
             });

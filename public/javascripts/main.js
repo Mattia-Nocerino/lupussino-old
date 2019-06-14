@@ -70,6 +70,10 @@ var vm = new Vue({
             // `this` points to the vm instance
             return this.room.player_list.filter(x => x.is_online).length;
         },
+        player_in_gioco: function () {
+            // `this` points to the vm instance
+            return this.room.player_list.filter(x => x.role.detail!="").length;
+        },
         vote_text: function () {
             if (this.player.has_voted){
                 return "Annulla voto";
