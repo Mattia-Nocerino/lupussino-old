@@ -12,7 +12,7 @@ Vue.component('player', {
     props: ['name', 'score', 'status', 'owner', 'crown', 'myself'],
     template: '<div class="player" v-bind:class="[(myself) ? \'myself\' : \'\']">' + 
                     '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
-                    '{{name}} | {{score}}' + 
+                    '<span class="player-name">{{name}}</span><span class="player-score">{{score}}</span>' + 
                     '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner && !myself"></span>' + 
                     '<span class="crown fas fa-crown" v-show="crown"></span>' + 
               '</div>',
@@ -80,6 +80,11 @@ var vm = new Vue({
             } else {
                 return "Conferma voto";
             }
+        },
+        scoreboard: function () {
+            return this.room.player_list.sort(function (a, b) {
+                return b.score - a.score;
+            });
         }
     },
     methods: {
@@ -177,16 +182,27 @@ socket.on('role', function(message) {
 });
 
 socket.on('reveal_roles', function() {
-    alert_string = "Partita conclusa!\n\n";
+    alert_string1 = "<div clas='swal-title'><b>Partita conclusa!</b></div>";
+    alert_string2 = "";
+    alert_string3 = "";
     vm.$data.room.player_list.filter(x => x.role.detail!='').forEach(p => {
         if(p.name == vm.$data.player.name){
-            alert_string += "Tu eri: " + p.role.name + " e hai votato: " + p.player_voted + "\n";
+            alert_string2 += "<div class='your-vote'>Tu eri: " + p.role.name + " e hai votato: " + p.player_voted + '<br></div>';
         } else {
-            alert_string += p.name + " era: " + p.role.name + " e ha votato: " + p.player_voted + "\n";
+            alert_string3 += "<div class='else-vote'>" + p.name + " era: " + p.role.name + " e ha votato: " + p.player_voted + "</div>";
         }
     });
 
-    alert(alert_string);
+
+    var alert_cnt_html = document.createElement("alert-cnt-html");
+    alert_cnt_html.innerHTML = alert_string1 + alert_string2 + alert_string3
+
+    swal({
+        content: {
+            element: alert_cnt_html,
+        },
+    });
+    //alert(alert_string+alert_string1+alert_string2);
 })
 
 function setCookie(name,value,days) {

@@ -38,8 +38,8 @@ html
             span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{player_number}}/{{room.player_list.length}}
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
           div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
-            player(v-bind:name="player.name" v-bind:score="player.score" v-bind:status="player.is_online" v-bind:owner="player.is_owner" v-bind:key="player.id" v-bind:crown="player.is_owner" v-bind:myself="true")
-            player(v-for="p in room.player_list" v-if="p.name!=player.name" v-bind:name="p.name" v-bind:score="p.score" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner" v-bind:myself="player.id==p.id")
+            transition-group(name="flip-list")
+              player(v-for="p in scoreboard" v-bind:name="p.name" v-bind:score="p.score" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner" v-bind:myself="player.id==p.id")
 
         div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
@@ -51,7 +51,7 @@ html
             div(class="flip-card-back")
 
         div#votazione(v-show="room.game_started && !room.vote_ended")
-          select(v-model="player.player_voted")
+          select(v-model="player.player_voted" v-bind:disabled="player.has_voted")
             option(disabled selected value="") Votazione...
             option Cielo
             option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='')" v-if="p.name!=player.name") {{p.name}}
@@ -82,4 +82,5 @@ html
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
+  script(src="https://unpkg.com/vue-swal")
   script(src='/javascripts/main.js')
