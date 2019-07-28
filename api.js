@@ -285,6 +285,7 @@ io.on('connection', function(socket){
             player.role.name = configurazione_attiva[random_item];
             configurazione_attiva.splice(random_item, 1);
         }
+
         var esiliate = configurazione_attiva;
         var assassini = players_online.filter(x => x.role.name == 'Assassino').slice();
 
@@ -296,6 +297,7 @@ io.on('connection', function(socket){
             player.player_voted = "";
             var altro_testimone = '';
             var altro_assassino = '';
+var tottestimoni =0;
 
             switch(player.role.name){
                 case "Cittadino":
@@ -311,6 +313,7 @@ io.on('connection', function(socket){
                     for(var t of players_online){
                         if (t.role.name == 'Testimone' && t.name != player.name){
                             altro_testimone += t.name + " - ";
+tottestimoni +=1;
                         }
                     }
                     
@@ -320,7 +323,7 @@ io.on('connection', function(socket){
                         if (room.testimoni_si_riconoscono){
                             player.role.detail = "Sei testimone con " + altro_testimone.slice(0, -3);
                         } else {
-                            player.role.detail = "Sei testimone insieme a qualcun altro!";
+                            player.role.detail = "Sei testimone insieme a qualcun altro! - " + tottestimoni;
                         }
                     }
                     break;
