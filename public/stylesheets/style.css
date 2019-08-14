@@ -94,11 +94,12 @@ html, body {
 }
 
 #new-game {
-  position: absolute;
+  /* position: absolute;
   bottom: 50px;
   left: 50%;
   transform: translate(-50%, 0);
-  width: 90%;
+  width: 90%; */
+  margin-top: 40px;
 }
 
 #player-list-cnt {
@@ -282,18 +283,18 @@ html, body {
   z-index: 1;
 }
 
-#votazione {
+#votazione, #cheat {
   margin-top: 40px;
   text-align: left; 
 }
 
-#votazione select {
+#votazione select, #cheat select {
     display: inline-block;
     padding: 10px;
     width: 40%;
 }
 
-#votazione .btn{
+#votazione .btn, #cheat .btn{
   float: right;
 }
 

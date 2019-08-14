@@ -9,6 +9,8 @@ class Player {
         this.player_voted = '';
         this.role = {name: 'In attesa che la partita inizi', detail: ''};
         this.score = 0;
+        this.cheat_available = true;
+        this.player_cheated = '';
     }
 
     joinRoom(room){
@@ -26,6 +28,7 @@ class Player {
                 this.score = existing_player.score;
                 this.has_voted = existing_player.has_voted;
                 this.player_voted = existing_player.player_voted;
+                this.cheat_available = existing_player.cheat_available;
 
                 room.player_list.splice(room.player_list.findIndex(x => x.name == this.name), 1);
                 room.player_list.push(this);

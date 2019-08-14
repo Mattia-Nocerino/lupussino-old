@@ -38,6 +38,8 @@ var vm = new Vue({
             is_online: false,
             has_voted: false,
             player_voted: '',
+            player_cheated: '',
+            cheat_available: true,
             score: 0,
             role: {
                 name: 'In attesa che la partita inizi',
@@ -118,6 +120,11 @@ var vm = new Vue({
                 socket.emit('vote', vm.$data);
             }
             //TODO LATO SERVER VOTAZIONE PIU' CALCOLO
+        },
+        cheat: function(){
+            vm.$data.player.cheat_available = false;
+            socket.emit('update_cheat', vm.$data);
+            alert(vm.$data.player.player_cheated + " è: " + vm.$data.room.player_list.filter(x => x.name==vm.$data.player.player_cheated)[0].role.name);
         },
         update_settings: function(){
             socket.emit('update_settings', vm.$data);

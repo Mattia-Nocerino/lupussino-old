@@ -137,7 +137,13 @@ io.on('connection', function(socket){
         var room = room_list.find(x => x.name == data.room.name);
         room.mitomane_riconosce_assassini = data.room.mitomane_riconosce_assassini;
         room.testimoni_si_riconoscono = data.room.testimoni_si_riconoscono;
+        io.to(room.name).emit('room_update', {room: room});
+    });
 
+    socket.on('update_cheat', function(data, callback){
+        var room = room_list.find(x => x.name == data.room.name);
+        var player = room.player_list.find(x => x.name == data.player.name);
+        player.cheat_available = data.player.cheat_available;
         io.to(room.name).emit('room_update', {room: room});
     });
 
@@ -294,10 +300,11 @@ io.on('connection', function(socket){
 
         players_online.forEach(player => {
             player.has_voted = false;
+            player.cheat_available = true;
             player.player_voted = "";
             var altro_testimone = '';
             var altro_assassino = '';
-var tottestimoni =0;
+            var tottestimoni =0;
 
             switch(player.role.name){
                 case "Cittadino":
@@ -313,7 +320,7 @@ var tottestimoni =0;
                     for(var t of players_online){
                         if (t.role.name == 'Testimone' && t.name != player.name){
                             altro_testimone += t.name + " - ";
-tottestimoni +=1;
+                            tottestimoni +=1;
                         }
                     }
                     
@@ -323,7 +330,11 @@ tottestimoni +=1;
                         if (room.testimoni_si_riconoscono){
                             player.role.detail = "Sei testimone con " + altro_testimone.slice(0, -3);
                         } else {
-                            player.role.detail = "Sei testimone insieme a qualcun altro! - " + tottestimoni;
+                            if (tottestimoni > 1) {
+                                player.role.detail = "Sei testimone insieme ad altri " + tottestimoni + " giocatori!";
+                            } else {
+                                player.role.detail = "Sei testimone insieme a qualcun altro!";
+                            }
                         }
                     }
                     break;
