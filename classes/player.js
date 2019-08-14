@@ -9,6 +9,8 @@ class Player {
         this.player_voted = '';
         this.role = {name: 'In attesa che la partita inizi', detail: ''};
         this.score = 0;
+        this.increment = 0;
+        this.bonus = 0;
         this.cheat_available = true;
         this.player_cheated = '';
     }

@@ -39,7 +39,18 @@ html
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
           div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
             transition-group(name="flip-list")
-              player(v-for="p in scoreboard" v-bind:name="p.name" v-bind:score="p.score" v-bind:status="p.is_online" v-bind:owner="player.is_owner" v-bind:key="p.id" v-bind:crown="p.is_owner" v-bind:myself="player.id==p.id")
+              player(v-for="p in scoreboard" v-bind:name="p.name" 
+                                             v-bind:vote_ended="room.vote_ended"
+                                             v-bind:role="p.role.name" 
+                                             v-bind:voted="p.player_voted" 
+                                             v-bind:score="p.score" 
+                                             v-bind:increment="p.increment" 
+                                             v-bind:bonus="p.bonus"
+                                             v-bind:status="p.is_online" 
+                                             v-bind:owner="player.is_owner"
+                                             v-bind:key="p.id" 
+                                             v-bind:crown="p.is_owner" 
+                                             v-bind:myself="player.id==p.id")
 
         div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
@@ -72,7 +83,7 @@ html
         div#setting-list
           div(class="setting" v-show="player_number > 2 && player_number < 9") Ruoli attivi:
             ul
-              li(class="role", v-for="r in room.configurazioni[player_number]") {{ r }}
+              li(class="role", :class="r" v-for="r in room.configurazioni[room.player_list.length]") {{ r }}
 
           div(class="setting") Mitomane riconosce Assassini
             label(class="switch")
