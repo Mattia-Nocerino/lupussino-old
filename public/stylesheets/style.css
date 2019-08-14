@@ -151,12 +151,13 @@ html, body {
 
 #player-list {
   text-align: left !important;
-  overflow-y: scroll;
-  max-height: 96px;
+  /* overflow-y: scroll;
+  max-height: 96px; */
 }
 
 #player-list-cnt.close #player-list{
   max-height: 0;
+  overflow: hidden;
 }
 
 .flip-list-move {
@@ -178,12 +179,61 @@ html, body {
 }
 
 .player-score {
-  margin-left: 10px;
+  margin-right: 25px;
+  margin-left: 5px;
   padding: 2px 10px;
   border-radius: 50px;
-  background-color: aliceblue;
-  display: inline-block;
+  background-color: #3970a0;
+  color: #ffffff;
+  float: right;
 }
+
+.player-name-container {
+  display: inline-block;
+  border-radius: 50px;
+  width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: -5px;
+}
+
+.player-name {
+  padding: 2px 5px;
+  display: inline-block;
+  min-width: 100%;
+}
+
+.fa-hand-point-right {
+  margin-left: 3px;
+}
+
+.increment, .bonus {
+  float: right;
+  margin-right: 5px;
+  padding: 2px 5px;
+  border-radius: 50px;
+  background-color: aliceblue;
+}
+
+.bonus {background-color: #15a009;}
+
+.player-name.Assassino      {background-color: #e40606; color: #ffffff;}
+.player-name.Mitomane       {background-color: #000000; color: #ffffff;}
+.player-name.Investigatore  {background-color: #9e42f5; color: #ffffff;}
+.player-name.Investigatrice {background-color: #f376e2; color: #000000;}
+.player-name.Testimone      {background-color: #0c148a; color: #ffffff;}
+.player-name.Cittadino      {background-color: #15a009; color: #ffffff;}
+.player-name.Cielo          {background-color: #29cff8; color: #000000;}
+
+.role::before {content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 100%; margin-right: 5px;}
+
+.role.Assassino::before       {background-color: #e40606; color: #ffffff;}
+.role.Mitomane::before        {background-color: #000000; color: #ffffff;}
+.role.Investigatore::before   {background-color: #9e42f5; color: #ffffff;}
+.role.Investigatrice::before  {background-color: #f376e2; color: #000000;}
+.role.Testimone::before       {background-color: #0c148a; color: #ffffff;}
+.role.Cittadino::before       {background-color: #15a009; color: #ffffff;}
 
 .kick, .crown {
   cursor: pointer;
@@ -367,7 +417,7 @@ option {
   margin-left: 20px;
   font-size: 13px;
   font-weight: normal;
-  max-height: 50px;
+  max-height: 100px;
   display: block;
   overflow-y: scroll;
 }

@@ -177,7 +177,8 @@ io.on('connection', function(socket){
             var tot_voti_mitomane = 0;
             var tot_non_voti_mitomane = 0;
             var pv;
-
+            
+            var calcolo_assassini = true;
             var bonus_totale_assassini = true;
             var bonus_totale_mitomane = true;
             var bonus_totale_buoni = true;
@@ -201,7 +202,8 @@ io.on('connection', function(socket){
                         }
                     }
                 } else {//Se sei un cattivo conto in quanti ti hanno votato e in quanti invece no
-                    if (player.role.name == 'Assassino'){
+                    if (player.role.name == 'Assassino' && calcolo_assassini){ //calcolo_assassini = booleano per fare il calcolo una sola volta e non ogni volta per ogni assassino!
+                        calcolo_assassini = false;
                         room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane').forEach(pp => {
                             if (pp.player_voted != 'Cielo') {
                                 var player_voted = room.player_list.find(x => x.name == pp.player_voted);
@@ -233,42 +235,44 @@ io.on('connection', function(socket){
 
                 switch(player.role.name){
                     case "Cittadino":
-                        player.score += (bonus ? +3 : -1);
+                        player.increment = (bonus ? +3 : -1);
                         break;
                     case "Testimone":
-                        player.score += (bonus ? +2 : -2);
+                        player.increment = (bonus ? +2 : -2);
                         break;
                     case "Investigatore":
                     case "Investigatrice":
-                        player.score += (bonus ? +2 : -3);
+                        player.increment = (bonus ? +2 : -3);
                         break;
                     case "Assassino":
-                        player.score += (tot_non_voti_assassino) - (tot_voti_assassino);
+                        player.increment = (tot_non_voti_assassino) - (tot_voti_assassino);
                         break;
                     case "Mitomane":
-                        player.score += (tot_voti_mitomane * 2) - (tot_non_voti_mitomane);
+                        player.increment = (tot_voti_mitomane * 2) - (tot_non_voti_mitomane);
                         break;
                 }
             });
             room.player_list.filter(x => x.role.detail!='').forEach(player => {//Assegnazione super bonus
                 switch(player.role.name){
                     case "Cittadino":
-                        player.score += (bonus_totale_buoni ? +2 : 0);
+                        player.bonus = (bonus_totale_buoni ? +2 : 0);
                         break;
                     case "Testimone":
-                        player.score += (bonus_totale_buoni ? +2 : 0);
+                        player.bonus = (bonus_totale_buoni ? +2 : 0);
                         break;
                     case "Investigatore":
                     case "Investigatrice":
-                        player.score += (bonus_totale_buoni ? +1 : 0);
+                        player.bonus = (bonus_totale_buoni ? +1 : 0);
                         break;
                     case "Assassino":
-                        player.score += (bonus_totale_assassini ? +2 : 0);
+                        player.bonus = (bonus_totale_assassini ? +2 : 0);
                         break;
                     case "Mitomane":
-                        player.score += (bonus_totale_mitomane ? +2 : 0);
+                        player.bonus = (bonus_totale_mitomane ? +2 : 0);
                         break;
                 }
+
+                player.score += player.increment + player.bonus;
             });
 
             io.to(room.name).emit('room_update', {room: room});
