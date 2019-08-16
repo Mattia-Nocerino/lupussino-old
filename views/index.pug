@@ -48,7 +48,7 @@ html
                                              v-bind:bonus="p.bonus"
                                              v-bind:status="p.is_online" 
                                              v-bind:owner="player.is_owner"
-                                             v-bind:key="p.id" 
+                                             v-bind:key="p.key"
                                              v-bind:crown="p.is_owner" 
                                              v-bind:myself="player.id==p.id")
 
@@ -61,7 +61,7 @@ html
                   div#detail {{ player.role.detail }}
             div(class="flip-card-back")
 
-        div#votazione(v-show="room.game_started && !room.vote_ended")
+        div#votazione(v-show="room.game_started && !room.vote_ended && player.role.detail!=''")
           select(v-model="player.player_voted" v-bind:disabled="player.has_voted")
             option(disabled selected value="") Votazione...
             option Cielo
@@ -83,7 +83,7 @@ html
         div#setting-list
           div(class="setting" v-show="player_number > 2 && player_number < 9") Ruoli attivi:
             ul
-              li(class="role", :class="r" v-for="r in room.configurazioni[room.player_list.length]") {{ r }}
+              li(class="role", :class="r" v-for="r in room.configurazioni[room.player_list.filter(x => x.role.detail!='').length]") {{ r }}
 
           div(class="setting") Mitomane riconosce Assassini
             label(class="switch")

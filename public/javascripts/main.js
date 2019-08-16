@@ -16,11 +16,11 @@ Vue.component('player', {
                     '<span class="bonus" v-show="bonus>0 && vote_ended">{{(bonus<0?"":"+")}}{{bonus}}</span>' +
                     '<span class="increment" v-show="vote_ended">{{(increment<0?"":"+")}}{{increment}}</span>' +
                     '<span class="player-name-container"><span class="player-name" v-bind:class="[(vote_ended) ? role : \'\']">{{name}}</span></span>' + 
-                    '<span class="vote-cnt" v-show="role!=\'Assassino\' && role!=\'Mitomane\' && vote_ended">'+
+                    '<span class="vote-cnt" v-show="role!=\'Assassino\' && role!=\'Mitomane\' && (vote_ended && role != \'In attesa che la partita inizi\')">'+
                         '<span class="fas fa-hand-point-right"></span>' +
                         '<span class="player-name-container"><span class="player-name">{{voted}}</span></span>' +
                     '</span>' +
-                    '<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner && !myself"></span>' + 
+                    //'<span @click="kick(name)" class="kick fas fa-times-circle" v-show="owner && !myself"></span>' + 
                     '<span class="crown fas fa-crown" v-show="crown"></span>' + 
               '</div>',
     methods: {
@@ -39,6 +39,7 @@ var vm = new Vue({
         room_list: [],
         player: {
             id: '',
+            key: 0,
             name: name,
             password: password,
             is_owner: false,
@@ -169,27 +170,38 @@ socket.on('connect', function() {
     }
 });
 
-socket.on('welcome', function(message) {
-    console.log(message);
-});
-
 socket.on('room_list', function(data) {
     vm.$data.room_list = data.room_list;
 });
 
 socket.on('room_update', function(data) {
-    old_vote = vm.$data.player.player_voted;
     vm.$data.room = data.room;
+    // vm.$data.room.player_list = [];
+    // vm.$data.room.player_list = data.room.player_list;
+    // vm.$data.room.name = data.room.name;
+    // vm.$data.room.mitomane_riconosce_assassini = data.room.mitomane_riconosce_assassini;
+    // vm.$data.room.testimoni_si_riconoscono = data.room.testimoni_si_riconoscono;
+    // vm.$data.room.configurazioni = data.room.configurazioni;
+    // vm.$data.room.game_started = data.room.game_started;
+    // vm.$data.room.vote_ended = data.room.vote_ended;
 
-    if (data.room.player_list.find(x => x.name == vm.$data.player.name) != undefined){
-        vm.$data.player = data.room.player_list.find(x => x.name == vm.$data.player.name);
+    old_vote = vm.$data.player.player_voted;
+    //console.log(vm.$data.player.is_online " - " );
+    vm.$data.player = vm.$data.room.player_list.filter(x => x.name == vm.$data.player.name)[0];
+
+    if (vm.$data.room.game_started) {
         vm.$data.player.player_voted = old_vote;
-    } else {
-        //giocatore kickato!
-        vm.$data.player.is_online = false
-        vm.$data.player.role.name = 'In attesa che la partita inizi'
-        vm.$data.player.role.detail = ''
     }
+
+    // if (data.room.player_list.find(x => x.name == vm.$data.player.name) != undefined){
+    //     vm.$data.player = data.room.player_list.find(x => x.name == vm.$data.player.name);
+    //     vm.$data.player.player_voted = old_vote;
+    // } else {
+    //     //giocatore kickato!
+    //     vm.$data.player.is_online = false
+    //     vm.$data.player.role.name = 'In attesa che la partita inizi'
+    //     vm.$data.player.role.detail = ''
+    // }
 });
 
 socket.on('role', function(message) {

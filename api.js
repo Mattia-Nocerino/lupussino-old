@@ -44,6 +44,7 @@ var configurazione_attiva = [];
 var esiliate = [];
 
 var room_list = [];
+var key = 0;
 
 io.on('connection', function(socket){
     //Invia la room list quando ti connetti
@@ -55,8 +56,8 @@ io.on('connection', function(socket){
             leaving_player = room.player_list.find(x => x.id == socket.id && x.is_online);
             if (leaving_player != undefined){
                 leaving_player.leaveRoom(room);
-                io.to(room.name).emit('room_update', {room: room});
                 io.emit('room_list', {room_list: room_list});
+                io.to(room.name).emit('room_update', {room: room});
             }
             // console.log(room_list);
             // console.log(room_list[0].player_list);
@@ -98,7 +99,8 @@ io.on('connection', function(socket){
 
     socket.on('room_enter', function(data, callback){
         var new_room = room_list.find(x => x.name == data.room.name);
-        var new_player = new Player(socket.id, data.player.name, data.player.password);
+        key += 1;
+        var new_player = new Player(socket.id, data.player.name, data.player.password, key);
         var player_name_already_in_use = false;
         var wrong_password = false;
 
@@ -217,14 +219,14 @@ io.on('connection', function(socket){
                                 tot_non_voti_assassino++;
                             }
                         });
-                        console.log(player.name + " - " + player.role.name + " TOT_VOTI=" + tot_voti_assassino + " TOT_NON_VOTI=" + tot_non_voti_assassino);
+                        //console.log(player.name + " - " + player.role.name + " TOT_VOTI=" + tot_voti_assassino + " TOT_NON_VOTI=" + tot_non_voti_assassino);
                     }
 
                     if (player.role.name == 'Mitomane'){
                         tot_voti_mitomane     = room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane').filter(y => y.player_voted == player.name).length;
                         tot_non_voti_mitomane = room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane').filter(y => y.player_voted != player.name).length;
 
-                        console.log(player.name + " - " + player.role.name + " TOT_VOTI=" + tot_voti_mitomane + " TOT_NON_VOTI=" + tot_non_voti_mitomane);
+                        //console.log(player.name + " - " + player.role.name + " TOT_VOTI=" + tot_voti_mitomane + " TOT_NON_VOTI=" + tot_non_voti_mitomane);
                     }
 
                     if (tot_non_voti_mitomane > 0){
@@ -277,12 +279,12 @@ io.on('connection', function(socket){
 
             io.to(room.name).emit('room_update', {room: room});
 
-            room.player_list.filter(x => x.role.detail!='').forEach(player => {
-                //partita finita, resetto i ruoli
-                player.role.name = 'In attesa che la partita inizi';
-                player.role.detail = '';
-                io.to(`${player.id}`).emit('role', player);
-            });
+            // room.player_list.filter(x => x.role.detail!='').forEach(player => {
+            //     //partita finita, resetto i ruoli
+            //     player.role.name = 'In attesa che la partita inizi';
+            //     player.role.detail = '';
+            //     io.to(`${player.id}`).emit('role', player);
+            // });
 
             io.to(room.name).emit('reveal_roles');
         }
