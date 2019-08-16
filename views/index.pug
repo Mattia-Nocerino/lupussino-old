@@ -95,6 +95,11 @@ html
               input(type="checkbox", v-model="room.testimoni_si_riconoscono")
               span(class="slider")
 
+          div(class="setting") Cittadini distinti
+            label(class="switch")
+              input(type="checkbox", v-model="room.cittadini_distinti")
+              span(class="slider")          
+
         div#save-setting(@click="update_settings",class="btn") Salva impostazioni
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')

@@ -61,6 +61,7 @@ var vm = new Vue({
             player_list: [],
             mitomane_riconosce_assassini: false,
             testimoni_si_riconoscono: false,
+            cittadini_distinti: false,
             configurazioni: [],
             game_started: false,
             vote_ended: false
@@ -75,6 +76,7 @@ var vm = new Vue({
         setting_window_open: false,
         mitomane_riconosce_assassini: false,
         testimoni_si_riconoscono: false,
+        cittadini_distinti: false,
         role_animation: false
     },
     computed: {
@@ -144,12 +146,16 @@ var vm = new Vue({
             if (vm.$data.setting_window_open == false){ //stai aprendo
                 vm.$data.mitomane_riconosce_assassini = vm.$data.room.mitomane_riconosce_assassini;
                 vm.$data.testimoni_si_riconoscono = vm.$data.room.testimoni_si_riconoscono;
+                vm.$data.cittadini_distinti = vm.$data.room.cittadini_distinti;
 
                 vm.$data.setting_window_open = true;
-            } else if (vm.$data.mitomane_riconosce_assassini != vm.$data.room.mitomane_riconosce_assassini || vm.$data.testimoni_si_riconoscono != vm.$data.room.testimoni_si_riconoscono) {//chiudi con impostazioni cambiate
+            } else if (vm.$data.mitomane_riconosce_assassini != vm.$data.room.mitomane_riconosce_assassini || 
+                       vm.$data.testimoni_si_riconoscono != vm.$data.room.testimoni_si_riconoscono ||
+                       vm.$data.cittadini_distinti != vm.$data.room.cittadini_distinti) {//chiudi con impostazioni cambiate
                 if (confirm("Chiudere senza salvare?")) {
                     vm.$data.room.mitomane_riconosce_assassini = vm.$data.mitomane_riconosce_assassini;
                     vm.$data.room.testimoni_si_riconoscono = vm.$data.testimoni_si_riconoscono;
+                    vm.$data.room.cittadini_distinti = vm.$data.cittadini_distinti;
                     vm.$data.setting_window_open = false;
                 }
             } else { //chiudi normalmente

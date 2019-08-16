@@ -224,6 +224,7 @@ html, body {
 .player-name.Investigatrice {background-color: #f376e2; color: #000000;}
 .player-name.Testimone      {background-color: #0c148a; color: #ffffff;}
 .player-name.Cittadino      {background-color: #15a009; color: #ffffff;}
+.player-name.Cittadina      {background-color: #15a009; color: #ffffff;}
 .player-name.Cielo          {background-color: #29cff8; color: #000000;}
 
 .role::before {content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 100%; margin-right: 5px;}
@@ -234,6 +235,7 @@ html, body {
 .role.Investigatrice::before  {background-color: #f376e2; color: #000000;}
 .role.Testimone::before       {background-color: #0c148a; color: #ffffff;}
 .role.Cittadino::before       {background-color: #15a009; color: #ffffff;}
+.role.Cittadina::before       {background-color: #15a009; color: #ffffff;}
 
 .kick, .crown {
   cursor: pointer;

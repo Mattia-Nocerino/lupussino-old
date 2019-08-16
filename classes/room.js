@@ -6,6 +6,7 @@ class Room {
         this.player_list = [];
         this.mitomane_riconosce_assassini = false;
         this.testimoni_si_riconoscono = false;
+        this.cittadini_distinti = false;
         this.game_started = false;
         this.vote_ended = false;
         this.configurazioni = [
@@ -31,6 +32,28 @@ class Room {
         return this.player_list.find(x => x.is_owner == true);
     }
 
+    updateCittadiniDistinti(ucd) {
+        if (ucd != this.cittadini_distinti) {
+            this.cittadini_distinti = ucd;
+
+            this.configurazioni.forEach((conf, i) => {
+                conf.forEach((r, j) =>  {
+                    if (ucd){
+                        if (r == 'Cittadino' && j == 1) {
+                            this.configurazioni[i][j] = 'Cittadina';
+                        }
+
+                    } else {
+                        if (r == 'Cittadina') {
+                            this.configurazioni[i][j] = 'Cittadino';
+                        }
+                    }
+                });
+            });
+        }
+        console.log(this.configurazioni);
+    }
+    
     // assignRoles() {
 
     // }
