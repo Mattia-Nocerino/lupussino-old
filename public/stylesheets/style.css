@@ -149,6 +149,15 @@ html, body {
   left: 6px; */
 }
 
+.spectator-cnt {
+  margin-left: 15px;
+  color: #ccc;
+}
+
+.spectator-cnt i {
+  margin-left: 2px;
+}
+
 #player-list {
   text-align: left !important;
   /* overflow-y: scroll;

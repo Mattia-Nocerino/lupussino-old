@@ -9,13 +9,13 @@ Vue.component('room', {
 })
 
 Vue.component('player', {
-    props: ['name', 'vote_ended', 'role', 'voted', 'voted_role', 'score', 'increment', 'bonus', 'status', 'owner', 'crown', 'myself'],
+    props: ['name', 'vote_ended', 'role', 'voted', 'voted_role', 'score', 'increment', 'bonus', 'status', 'owner', 'crown', 'myself', 'amispectator'],
     template: '<div class="player" v-bind:class="[(myself) ? \'myself\' : \'\']">' + 
                     '<span class="status fas fa-circle" v-bind:class="[(status) ? \'online\' : \'offline\']"></span>' +
                     '<span class="player-score">{{(score<0?"":"+")}}{{score}}</span>' + 
                     '<span class="bonus" v-show="bonus>0 && vote_ended">{{(bonus<0?"":"+")}}{{bonus}}</span>' +
                     '<span class="increment" v-show="vote_ended">{{(increment<0?"":"+")}}{{increment}}</span>' +
-                    '<span class="player-name-container"><span class="player-name" v-bind:class="[(vote_ended) ? role : \'\']">{{name}}</span></span>' + 
+                    '<span class="player-name-container"><span class="player-name" v-bind:class="[(vote_ended || amispectator) ? role : \'\']">{{name}}</span></span>' + 
                     '<span class="vote-cnt" v-show="role!=\'Assassino\' && role!=\'Mitomane\' && (vote_ended && role != \'In attesa che la partita inizi\')">'+
                         '<span class="fas fa-hand-point-right"></span>' +
                         '<span class="player-name-container"><span class="player-name">{{voted}}</span></span>' +
@@ -44,6 +44,7 @@ var vm = new Vue({
             password: password,
             is_owner: false,
             is_online: false,
+            spectator: false,
             has_voted: false,
             player_voted: '',
             player_cheated: '',
@@ -82,7 +83,7 @@ var vm = new Vue({
     computed: {
         player_number: function () {
             // `this` points to the vm instance
-            return this.room.player_list.filter(x => x.is_online).length;
+            return this.room.player_list.filter(x => x.is_online && !x.spectator).length;
         },
         player_in_gioco: function () {
             // `this` points to the vm instance
@@ -96,7 +97,7 @@ var vm = new Vue({
             }
         },
         scoreboard: function () {
-            return this.room.player_list.sort(function (a, b) {
+            return this.room.player_list.filter(x => !x.spectator).sort(function (a, b) {
                 return b.score - a.score;
             });
         }

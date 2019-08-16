@@ -18,6 +18,8 @@ html
         input#password(v-model="player.password", type="password", required="true")
         div(class="label") Stanza
         input#room(v-model="room.name", type="text", required="true", list="room-list")
+        div(class="label") Spettatore
+        input#spectator(v-model="player.spectator", type="checkbox", required="true")
 
         datalist#room-list
           room(v-for="room in room_list" v-bind:name="room.name" v-bind:players="room.player_list.filter(x => x.is_online).length" v-bind:key="room.id")
@@ -35,7 +37,9 @@ html
         div#player-list-cnt(v-bind:class="[(player_list_open) ? 'open':'close']")
           div#player-list-title
             span#setting-toggle(class="fas fa-cog", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
-            span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{player_number}}/{{room.player_list.length}}
+            span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{player_number}}/{{room.player_list.filter(x => !x.spectator).length}}
+              span(class="spectator-cnt") {{room.player_list.filter(x => x.spectator).length}}
+                i(class="fas fa-eye" v-show="room.player_list.filter(x => x.spectator).length > 0") 
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
           div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
             transition-group(name="flip-list")
@@ -50,7 +54,8 @@ html
                                              v-bind:owner="player.is_owner"
                                              v-bind:key="p.key"
                                              v-bind:crown="p.is_owner" 
-                                             v-bind:myself="player.id==p.id")
+                                             v-bind:myself="player.id==p.id"
+                                             v-bind:myrole="player.spectator")
 
         div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
@@ -65,14 +70,13 @@ html
           select(v-model="player.player_voted" v-bind:disabled="player.has_voted")
             option(disabled selected value="") Votazione...
             option Cielo
-            option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='')" v-if="p.name!=player.name") {{p.name}}
+            option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
           div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
-          div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='').length}}
-
+          div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='' && !x.spectator).length}}
         div#cheat(v-show="room.game_started && player.name == 'VietatoImbrogliare!' && player.cheat_available")
           select(v-model="player.player_cheated")
             option(disabled selected value="") Seleziona un giocatore da spiare...
-            option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='')" v-if="p.name!=player.name") {{p.name}}
+            option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
           div#cheat-btn(@click="cheat", class="btn") Spia!
 
         div#new-game(@click="game", v-show="player.is_owner && player_number > 2 && player_number < 9", class="btn") Nuova partita!
@@ -83,7 +87,7 @@ html
         div#setting-list
           div(class="setting" v-show="player_number > 2 && player_number < 9") Ruoli attivi:
             ul
-              li(class="role", :class="r" v-for="r in room.configurazioni[room.player_list.filter(x => x.role.detail!='').length]") {{ r }}
+              li(class="role", :class="r" v-for="r in room.configurazioni[room.player_list.filter(x => x.role.detail!='' && !x.spectator).length]") {{ r }}
 
           div(class="setting") Mitomane riconosce Assassini
             label(class="switch")

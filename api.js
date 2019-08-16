@@ -55,7 +55,14 @@ io.on('connection', function(socket){
         room_list.forEach((room, index) => {
             leaving_player = room.player_list.find(x => x.id == socket.id && x.is_online);
             if (leaving_player != undefined){
-                leaving_player.leaveRoom(room);
+                if (!leaving_player.spectator){
+                    leaving_player.leaveRoom(room);
+                } else {
+                    room.player_list = room.player_list.filter(x => x.name != leaving_player.name);
+                    if (io.sockets.sockets[player.id] != undefined){
+                        io.sockets.sockets[leaving_player.id].leave(room.name);
+                    }
+                }
                 io.emit('room_list', {room_list: room_list});
                 io.to(room.name).emit('room_update', {room: room});
             }
@@ -100,14 +107,13 @@ io.on('connection', function(socket){
     socket.on('room_enter', function(data, callback){
         var new_room = room_list.find(x => x.name == data.room.name);
         key += 1;
-        var new_player = new Player(socket.id, data.player.name, data.player.password, key);
+        var new_player = new Player(socket.id, data.player.name, data.player.password, data.player.spectator, key);
         var player_name_already_in_use = false;
         var wrong_password = false;
 
         if (new_room == undefined){//creazione stanza
             new_room = new Room(data.room.name);
             room_list.push(new_room);
-            new_player.is_owner = true;
         }
 
         if (new_player.joinRoom(new_room) == -1){
@@ -161,7 +167,7 @@ io.on('connection', function(socket){
             player.player_voted = '';
         }
 
-        if (room.player_list.filter(x => x.role.detail!='').length == room.player_list.filter(x => x.has_voted).length){
+        if (room.player_list.filter(x => x.role.detail!='' && !x.spectator).length == room.player_list.filter(x => x.has_voted).length){
             room.game_started = false;
             room.vote_ended = true;
             //set has_voted = false to all
@@ -185,7 +191,7 @@ io.on('connection', function(socket){
             var bonus_totale_assassini = true;
             var bonus_totale_mitomane = true;
             var bonus_totale_buoni = true;
-            room.player_list.filter(x => x.role.detail!='').forEach(player => {
+            room.player_list.filter(x => x.role.detail!='' && !x.spectator).forEach(player => {
                 if (player.role.name != 'Assassino' && player.role.name != 'Mitomane'){//Calcolo per buoni
                     if (player.player_voted == 'Cielo'){//Se voto al cielo controllo per assassini in gioco
                         if (room.player_list.filter(x => x.role.name == 'Assassino').length == 0){
@@ -256,7 +262,7 @@ io.on('connection', function(socket){
                         break;
                 }
             });
-            room.player_list.filter(x => x.role.detail!='').forEach(player => {//Assegnazione super bonus
+            room.player_list.filter(x => x.role.detail!='' && !x.spectator).forEach(player => {//Assegnazione super bonus
                 switch(player.role.name){
                     case "Cittadino":
                     case "Cittadina":
@@ -282,7 +288,7 @@ io.on('connection', function(socket){
 
             io.to(room.name).emit('room_update', {room: room});
 
-            // room.player_list.filter(x => x.role.detail!='').forEach(player => {
+            // room.player_list.filter(x => x.role.detail!='' && !x.spectator).forEach(player => {
             //     //partita finita, resetto i ruoli
             //     player.role.name = 'In attesa che la partita inizi';
             //     player.role.detail = '';
@@ -309,7 +315,7 @@ io.on('connection', function(socket){
             }
         });
 
-        var players_online = room.player_list.filter(x => x.is_online).slice();
+        var players_online = room.player_list.filter(x => x.is_online && !x.spectator).slice();
         var tot_players = players_online.length;
 
         room.updateCittadiniDistinti(room.cittadini_distinti);

@@ -1,11 +1,12 @@
 class Player {
-    constructor(id, name, password, key){
+    constructor(id, name, password, spectator, key){
         this.id = id;
         this.key = key;
         this.name = name;
         this.password = password;
         this.is_owner = false;
         this.is_online = true;
+        this.spectator = spectator;
         this.has_voted = false;
         this.player_voted = '';
         this.role = {name: 'In attesa che la partita inizi', detail: ''};
@@ -73,7 +74,7 @@ class Player {
         this.is_online = false;
 
         if (this.is_owner){
-            var new_owner = room.player_list.find(x => x.is_online);
+            var new_owner = room.player_list.find(x => x.is_online && !x.spectator);
             if (new_owner != undefined) {
                 new_owner.setOwnership(room);
             }
@@ -84,10 +85,14 @@ class Player {
         var current_owner = room.player_list.find(x => x.is_owner);
 
         if (current_owner == undefined){//owner inesistente
-            this.is_owner = true;
+            if (!this.spectator) {
+                this.is_owner = true;
+            }
         } else if (!current_owner.is_online){//owner inesistente MA offline
-            this.is_owner = true;
-            current_owner.is_owner = false;
+            if (!this.spectator) {
+                this.is_owner = true;
+                current_owner.is_owner = false;
+            }
         }//owner c'è ed è online, non faccio niente
     }
 }
