@@ -51,7 +51,6 @@ class Room {
                 });
             });
         }
-        console.log(this.configurazioni);
     }
     
     // assignRoles() {

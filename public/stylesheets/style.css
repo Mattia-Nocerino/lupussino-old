@@ -93,6 +93,26 @@ html, body {
   font-style: italic;
 }
 
+.join-as-spectator {
+  border-top: 1px solid #ccc;
+  text-align: right;
+  margin-bottom: 30px;
+  font-style: italic;
+  color: #666;
+}
+
+label.fa-eye {
+  font-size: 23px;
+  margin-left: 10px;
+  position: relative;
+  top: 3px;
+  cursor: pointer;
+}
+
+label.fa-eye.on {
+  color: #4CAF50;
+}
+
 #new-game {
   /* position: absolute;
   bottom: 50px;

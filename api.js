@@ -192,6 +192,7 @@ io.on('connection', function(socket){
             var bonus_totale_mitomane = true;
             var bonus_totale_buoni = true;
             room.player_list.filter(x => x.role.detail!='' && !x.spectator).forEach(player => {
+                console.log(player.name)
                 if (player.role.name != 'Assassino' && player.role.name != 'Mitomane'){//Calcolo per buoni
                     if (player.player_voted == 'Cielo'){//Se voto al cielo controllo per assassini in gioco
                         if (room.player_list.filter(x => x.role.name == 'Assassino').length == 0){
@@ -213,7 +214,7 @@ io.on('connection', function(socket){
                 } else {//Se sei un cattivo conto in quanti ti hanno votato e in quanti invece no
                     if (player.role.name == 'Assassino' && calcolo_assassini){ //calcolo_assassini = booleano per fare il calcolo una sola volta e non ogni volta per ogni assassino!
                         calcolo_assassini = false;
-                        room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane').forEach(pp => {
+                        room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane' && !x.spectator).forEach(pp => {
                             if (pp.player_voted != 'Cielo') {
                                 var player_voted = room.player_list.find(x => x.name == pp.player_voted);
                                 if (player_voted.role.name == 'Assassino'){
@@ -230,8 +231,8 @@ io.on('connection', function(socket){
                     }
 
                     if (player.role.name == 'Mitomane'){
-                        tot_voti_mitomane     = room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane').filter(y => y.player_voted == player.name).length;
-                        tot_non_voti_mitomane = room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane').filter(y => y.player_voted != player.name).length;
+                        tot_voti_mitomane     = room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane' && !x.spectator).filter(y => y.player_voted == player.name).length;
+                        tot_non_voti_mitomane = room.player_list.filter(x => x.role.name != 'Assassino' && x.role.name != 'Mitomane' && !x.spectator).filter(y => y.player_voted != player.name).length;
 
                         //console.log(player.name + " - " + player.role.name + " TOT_VOTI=" + tot_voti_mitomane + " TOT_NON_VOTI=" + tot_non_voti_mitomane);
                     }
