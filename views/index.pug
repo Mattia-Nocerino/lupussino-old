@@ -74,7 +74,7 @@ html
             option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
           div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
           div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='' && !x.spectator).length}}
-        div#cheat(v-show="room.game_started && player.name == 'VietatoImbrogliare!' && player.cheat_available")
+        div#cheat(v-show="room.game_started && player.name == 'Valentina8' && player.cheat_available")
           select(v-model="player.player_cheated")
             option(disabled selected value="") Seleziona un giocatore da spiare...
             option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
