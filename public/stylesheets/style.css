@@ -165,11 +165,12 @@ label.fa-eye.on {
 }
 
 #setting-toggle {
-  float: left;
   cursor: pointer;
   font-size: 16px;
-  position: relative;
-  z-index: 999;
+  position: fixed;
+  left: 20px;
+  top: 30px;
+  z-index: 1001;
 }
 
 #setting-toggle.close {
@@ -414,20 +415,19 @@ option {
   display: table;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.8);
+  background: linear-gradient(#7d7d7d, #fff);
   top: 0;
-  left: 0;
+  left: -100%;
   padding: 5%;
+  z-index: 999;
 }
 
 #setting-window.close {
-  opacity: 0;
-  z-index: -999;
+  left: -100%;
 }
 
 #setting-window.open {
-  opacity: 1;
-  z-index: 998;
+  left: 0;
 }
 
 #setting-list {
