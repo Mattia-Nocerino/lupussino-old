@@ -26,24 +26,26 @@ html, body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .btn {
   padding: 10px;
   cursor: pointer;
   background-color: #4CAF50;
-  box-shadow: 0 3px #999;
+  /* box-shadow: 0 3px #999; */
   color: white;
   font-weight: bold;
+  border: 1px solid #000;
 }
 
 .btn:hover {background-color: #3e8e41}
 
-.btn:active {
+/* .btn:active {
   background-color: #3e8e41;
   box-shadow: 0 1px #666;
   transform: translateY(2px);
-}
+} */
 
 .btn.annulla {
   background-color: #d01818
@@ -72,7 +74,7 @@ html, body {
 }
 
 #role-cnt {
-  padding: 10px 5%;
+  height: 100%;
 }
 
 .label {
@@ -113,18 +115,29 @@ label.fa-eye.on {
   color: #4CAF50;
 }
 
+#bottom-controls {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  padding: 20px;
+}
+
 #new-game {
   /* position: absolute;
   bottom: 50px;
   left: 50%;
   transform: translate(-50%, 0);
   width: 90%; */
-  margin-top: 40px;
+  bottom: 0px;
+  padding: 15px;
 }
 
 #player-list-cnt {
-  border: 1px solid #eee;
-  margin-bottom: 40px;
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  padding: 20px;
 }
 
 #player-list-cnt.close {
@@ -134,8 +147,9 @@ label.fa-eye.on {
 #player-list-title {
   color: #4CAF50;
   font-weight: bold;
-  border-bottom: 1px solid #eee;
-  padding: 10px; 
+  border-bottom: 1px solid #000;
+  padding: 10px 0;
+  margin-bottom: 5px;
 }
 
 #player-list-toggle {
@@ -145,6 +159,8 @@ label.fa-eye.on {
 }
 
 #player-list-cnt.close #player-list-toggle {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 
@@ -162,6 +178,8 @@ label.fa-eye.on {
 
 #setting-toggle.open {
   color: #fff;
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
   transform: rotate(180deg);
   /* position: absolute;
   font-size: 28px;
@@ -171,7 +189,7 @@ label.fa-eye.on {
 
 .spectator-cnt {
   margin-left: 15px;
-  color: #ccc;
+  color: #666;
 }
 
 .spectator-cnt i {
@@ -286,10 +304,48 @@ label.fa-eye.on {
   margin-right: 5px;
 }
 
+#tappo-ruolo {
+  position: absolute;
+  z-index: 998;
+  width: 100%;
+  height: 100%;
+  background-color: #f9f3e0;
+  border: 10px solid #000;
+  border-radius: 10px;
+}
+
+#tappo-ruolo #sfondo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  z-index: -1;
+  background-image: url('/img/sfondo-carta.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#tappo-ruolo.rotate #sfondo {
+  -webkit-transform: rotate(720deg);
+  -ms-transform: rotate(720deg);
+  transform: rotate(720deg);
+}
+
+.flip-card.up #tappo-ruolo {
+  left: 100%;
+}
+
+.flip-card.down #tappo-ruolo {
+  left: 0%;
+}
+
 #role-description-cnt{
   display: table-cell;
   vertical-align: middle;
   padding: 0 10px;
+  width: 100%;
+  height: 100%;
 }
 
 #role {
@@ -307,83 +363,36 @@ label.fa-eye.on {
 
 
 .flip-card {
-  background-color: transparent;
-  height: 200px;
-  -webkit-perspective: 1000px;
-  -khtml-perspective: 1000px;
-  -moz-perspective: 1000px;
-  -ms-perspective: 1000px;
-  perspective: 1000px;
-}
-
-.flip-card-inner {
-  position: relative;
   width: 100%;
   height: 100%;
-  -webkit-transform-style: preserve-3d;
-  -khtml-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  border: 1px solid #444;
-}
-
-.flip-card.down .flip-card-inner {
-  -webkit-transform: rotateY(180deg);
-  -khtml-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
-  -ms-transform: rotateY(180deg);
-  transform: rotateY(180deg);
-}
-
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  -khtml-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-.flip-card-front {
-  background-color: #eee;
-  z-index: 2;
   display: table;
 }
 
-.flip-card-back {
-  background-color: #2980b9;
-  -webkit-transform: rotateY(180deg);
-  -khtml-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
-  -ms-transform: rotateY(180deg);
-  transform: rotateY(180deg);
-  z-index: 1;
-}
-
 #votazione, #cheat {
-  margin-top: 40px;
-  text-align: left; 
+  margin-bottom: 20px;
 }
 
 #votazione select, #cheat select {
     display: inline-block;
     padding: 10px;
-    width: 40%;
+    height: 38px;
+    width: 49%;
+    margin-right: 2%;
+    border: 1px solid #000;
 }
 
 #votazione .btn, #cheat .btn{
-  float: right;
+  display: inline-block;
+  width: 49%;
+  position: relative;
 }
 
 #vote-detail {
-  text-align: right;
+  position: absolute;
   font-style: italic;
   font-size: 12px;
-  margin-top: 5px;
+  bottom: 1px;
+  right: 4px;
 }
 
 select:required:invalid {
