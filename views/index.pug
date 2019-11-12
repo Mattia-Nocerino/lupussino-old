@@ -85,9 +85,9 @@ html
 
       div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#setting-list
-          div(class="setting" v-show="player_number > 2 && player_number < 9 && room.configurazioni[room.player_list.filter(x => x.role.detail!='' && !x.spectator).length].length > 1") Ruoli attivi:
+          div(class="setting" v-show="player_number < 9") Ruoli attivi:
             ul
-              li(class="role" :class="r" v-for="r in room.configurazioni[room.player_list.filter(x => x.role.detail!='' && !x.spectator).length]") {{ r }}
+              li(class="role" :class="r" v-for="r in room.configurazioni[(room.player_list.filter(x => x.role.detail!='' && !x.spectator).length < 3) ? 3 : room.player_list.filter(x => x.role.detail!='' && !x.spectator).length]") {{ r }}
 
           //- div(class="setting") Mitomane riconosce Assassini
           //-   label(class="switch")
@@ -104,7 +104,7 @@ html
           //-     input(type="checkbox", v-model="room.cittadini_distinti")
           //-     span(class="slider")          
 
-        div#save-setting(@click="update_settings",class="btn") {{(room.player_list.filter(x => x.role.detail!='' && !x.spectator).length < 3) ? 3, room.player_list.filter(x => x.role.detail!='' && !x.spectator).length}}
+        div#save-setting(@click="update_settings",class="btn") Salva
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
