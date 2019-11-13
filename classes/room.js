@@ -6,7 +6,7 @@ class Room {
         this.player_list = [];
         this.mitomane_riconosce_assassini = false;
         this.testimoni_si_riconoscono = false;
-        this.cittadini_distinti = false;
+        this.cittadini_distinti = true;
         this.game_started = false;
         this.vote_ended = false;
         this.configurazioni = [
@@ -16,9 +16,9 @@ class Room {
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore"], //3
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //4
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //5
-            ["Cittadino", "Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //6
-            ["Cittadino", "Cittadino", "Testimone", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //7
-            ["Cittadino", "Cittadino", "Testimone", "Testimone", "Testimone", "Assassino", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //8
+            ["Cittadino", "Cittadina", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //6
+            ["Cittadino", "Cittadina", "Testimone", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //7
+            ["Cittadino", "Cittadina", "Testimone", "Testimone", "Testimone", "Assassino", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //8
             [""], //9
             [""]  //10
         ];
