@@ -59,11 +59,27 @@ var vm = new Vue({
         },
         room: {
             name: '',
-            player_list: [],
+            player_list: [{
+                id: 0,
+                key: 0,
+                name: '',
+                password: '',
+                is_owner: false,
+                is_online: false,
+                spectator: false,
+                has_voted: false,
+                player_voted: '',
+                role: {name: 'In attesa che la partita inizi', detail: ''},
+                score: 0,
+                increment: 0,
+                bonus: 0,
+                cheat_available: true,
+                player_cheated: ''
+            }],
             mitomane_riconosce_assassini: false,
             testimoni_si_riconoscono: false,
             cittadini_distinti: false,
-            configurazioni: [],
+            configurazioni: [['']],
             game_started: false,
             vote_ended: false
         },
@@ -85,9 +101,16 @@ var vm = new Vue({
             // `this` points to the vm instance
             return this.room.player_list.filter(x => x.is_online && !x.spectator).length;
         },
-        player_in_gioco: function () {
+        player_giocanti: function () {
             // `this` points to the vm instance
-            return this.room.player_list.filter(x => x.role.detail!="").length;
+            return this.room.player_list.filter(x => x.role.detail!='' && !x.spectator).length;
+        },
+        n: function () {
+            if (this.room.game_started) {
+                return this.player_giocanti;
+            } else {
+                return this.player_number;
+            }
         },
         vote_text: function () {
             if (this.player.has_voted){
@@ -100,6 +123,26 @@ var vm = new Vue({
             return this.room.player_list.filter(x => !x.spectator).sort(function (a, b) {
                 return b.score - a.score;
             });
+        },
+        uniqueNames: function() {
+            var filtered_array = [];
+            var starting_array = this.room.configurazioni[this.n];
+            var qty = 0;
+            var prv = '';
+            for(var i=0; i < starting_array.length; i++) {
+              if (prv != starting_array[i] && prv != '') {
+                filtered_array.push({r: prv, q: qty});
+                qty = 1;
+              } else {
+                qty++;
+              }
+              
+              if (i == starting_array.length - 1) {
+                filtered_array.push({r: starting_array[i], q: qty});
+              }
+              prv = starting_array[i];
+            }
+            return filtered_array;
         }
     },
     methods: {

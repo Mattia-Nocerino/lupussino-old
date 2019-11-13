@@ -25,7 +25,8 @@ html
         datalist#room-list
           room(v-for="room in room_list" v-bind:name="room.name" v-bind:players="room.player_list.filter(x => x.is_online).length" v-bind:key="room.id")
 
-        div#enter(@click="room_enter", class="btn") Entra!
+        div(class="bottom-controls")
+          div#enter(@click="room_enter", class="btn") Entra!
 
         span(class="error", v-if="errors.player_name_already_in_use") Nickname già utilizzato!
         span(class="error", v-if="errors.missing_login_data") Inserisci un nickname e una stanza!
@@ -37,7 +38,7 @@ html
         span#setting-toggle(class="fas fa-cog", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#player-list-cnt(v-bind:class="[(player_list_open) ? 'open':'close']")
           div#player-list-title
-            span Stanza {{room.name}} - {{player_number}}/{{room.player_list.filter(x => !x.spectator).length}}
+            span {{room.name}} - {{player_number}}/{{room.player_list.filter(x => !x.spectator).length}}
               span(class="spectator-cnt") {{room.player_list.filter(x => x.spectator).length}}
                 i(class="fas fa-eye" v-show="room.player_list.filter(x => x.spectator).length > 0") 
             span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open")
@@ -65,17 +66,17 @@ html
               div#role {{ player.role.name }}
               div#detail {{ player.role.detail }}
 
-        div#bottom-controls
-          div#votazione(v-show="room.game_started && !room.vote_ended && player.role.detail!=''")
+        div(class="bottom-controls")
+          div#votazione(v-show="room.game_started && !room.vote_ended && player.role.detail!=''", class="clearfix")
             select(v-model="player.player_voted" v-bind:disabled="player.has_voted")
               option(disabled selected value="") Votazione...
               option Cielo
               option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
             div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
               div#vote-detail {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='' && !x.spectator).length}}
-          div#cheat(v-show="room.game_started && player.name == 'Valentina8' && player.cheat_available")
+          div#cheat(v-show="room.game_started && player.name == 'Valentina8' && player.cheat_available", class="clearfix")
             select(v-model="player.player_cheated")
-              option(disabled selected value="") Seleziona un giocatore da spiare...
+              option(disabled selected value="") Spia...
               option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
             div#cheat-btn(@click="cheat", class="btn") Spia!
 
@@ -85,9 +86,10 @@ html
 
       div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#setting-list
-          div(class="setting" v-show="player_number < 9") Ruoli attivi:
+          div(class="setting" v-show="player_number < 9") Ruoli attivi per {{n}} giocatori:
             ul
-              li(class="role" :class="r" v-for="r in room.configurazioni[(room.player_list.filter(x => x.role.detail!='' && !x.spectator).length < 3) ? 3 : room.player_list.filter(x => x.role.detail!='' && !x.spectator).length]") {{ r }}
+              li(class="role" :class="r.r" v-for="r in uniqueNames") {{ r.r }} 
+                span(v-if="(r.q > 1)") ✖ {{ r.q }}
 
           //- div(class="setting") Mitomane riconosce Assassini
           //-   label(class="switch")
@@ -103,8 +105,9 @@ html
           //-   label(class="switch")
           //-     input(type="checkbox", v-model="room.cittadini_distinti")
           //-     span(class="slider")          
-
-        div#save-setting(@click="update_settings",class="btn") Salva
+        
+        //- div(class="bottom-controls")
+        //-   div#save-setting(@click="update_settings",class="btn") Salva
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')

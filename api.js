@@ -54,12 +54,13 @@ io.on('connection', function(socket){
         var leaving_player;
         room_list.forEach((room, index) => {
             leaving_player = room.player_list.find(x => x.id == socket.id && x.is_online);
+            console.log(leaving_player);
             if (leaving_player != undefined){
                 if (!leaving_player.spectator){
                     leaving_player.leaveRoom(room);
                 } else {
                     room.player_list = room.player_list.filter(x => x.name != leaving_player.name);
-                    if (io.sockets.sockets[player.id] != undefined){
+                    if (io.sockets.sockets[leaving_player.id] != undefined){
                         io.sockets.sockets[leaving_player.id].leave(room.name);
                     }
                 }
