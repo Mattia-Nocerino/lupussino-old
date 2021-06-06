@@ -12,7 +12,7 @@ class Room {
         this.configurazioni = [
             [""], //0
             [""], //1
-            [""], //2
+            ["Cittadino", "Investigatore"], //2
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore"], //3
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //4
             ["Cittadino", "Testimone", "Testimone", "Assassino", "Assassino", "Mitomane", "Investigatore", "Investigatrice"], //5

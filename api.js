@@ -323,6 +323,11 @@ io.on('connection', function(socket){
         //room.updateCittadiniDistinti(room.cittadini_distinti);
         
         configurazione_attiva = room.configurazioni[tot_players].slice();
+
+        if (tot_players == 2) { //Se giocatori sono due aggiungi solo o un lupo o un mitomane random
+            var cattivi_temp = ["Assassino", "Mitomane"];
+            configurazione_attiva.push(cattivi_temp[Math.floor(Math.random() * 2)]);
+        }
         //ASSEGNAZIONE RUOLI + ESILIATE
         for(var player of players_online){
             var random_item = Math.floor(Math.random() * configurazione_attiva.length);
