@@ -54,12 +54,13 @@ io.on('connection', function(socket){
         var leaving_player;
         room_list.forEach((room, index) => {
             leaving_player = room.player_list.find(x => x.id == socket.id && x.is_online);
+            console.log(leaving_player);
             if (leaving_player != undefined){
                 if (!leaving_player.spectator){
                     leaving_player.leaveRoom(room);
                 } else {
                     room.player_list = room.player_list.filter(x => x.name != leaving_player.name);
-                    if (io.sockets.sockets[player.id] != undefined){
+                    if (io.sockets.sockets[leaving_player.id] != undefined){
                         io.sockets.sockets[leaving_player.id].leave(room.name);
                     }
                 }
@@ -145,7 +146,7 @@ io.on('connection', function(socket){
         var room = room_list.find(x => x.name == data.room.name);
         room.mitomane_riconosce_assassini = data.room.mitomane_riconosce_assassini;
         room.testimoni_si_riconoscono = data.room.testimoni_si_riconoscono;
-        room.updateCittadiniDistinti(data.room.cittadini_distinti);
+        //room.updateCittadiniDistinti(data.room.cittadini_distinti);
         io.to(room.name).emit('room_update', {room: room});
     });
 
@@ -319,9 +320,14 @@ io.on('connection', function(socket){
         var players_online = room.player_list.filter(x => x.is_online && !x.spectator).slice();
         var tot_players = players_online.length;
 
-        room.updateCittadiniDistinti(room.cittadini_distinti);
+        //room.updateCittadiniDistinti(room.cittadini_distinti);
         
         configurazione_attiva = room.configurazioni[tot_players].slice();
+
+        if (tot_players == 2) { //Se giocatori sono due aggiungi solo o un lupo o un mitomane random
+            var cattivi_temp = ["Assassino", "Mitomane"];
+            configurazione_attiva.push(cattivi_temp[Math.floor(Math.random() * 2)]);
+        }
         //ASSEGNAZIONE RUOLI + ESILIATE
         for(var player of players_online){
             var random_item = Math.floor(Math.random() * configurazione_attiva.length);

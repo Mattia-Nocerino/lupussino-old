@@ -25,7 +25,8 @@ html
         datalist#room-list
           room(v-for="room in room_list" v-bind:name="room.name" v-bind:players="room.player_list.filter(x => x.is_online).length" v-bind:key="room.id")
 
-        div#enter(@click="room_enter", class="btn") Entra!
+        div(class="bottom-controls")
+          div#enter(@click="room_enter", class="btn") Entra!
 
         span(class="error", v-if="errors.player_name_already_in_use") Nickname già utilizzato!
         span(class="error", v-if="errors.missing_login_data") Inserisci un nickname e una stanza!
@@ -34,15 +35,14 @@ html
 
       //-GIOCO
       div#role-cnt(v-if="player.is_online")
-
+        span#setting-toggle(class="fas fa-cog", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#player-list-cnt(v-bind:class="[(player_list_open) ? 'open':'close']")
           div#player-list-title
-            span#setting-toggle(class="fas fa-cog", @click="open_settings", v-bind:class="[(setting_window_open) ? 'open':'close']")
-            span(v-bind:class="[(setting_window_open) ? 'blur':'']") Stanza {{room.name}} - {{player_number}}/{{room.player_list.filter(x => !x.spectator).length}}
+            span {{room.name}} - {{player_number}}/{{room.player_list.filter(x => !x.spectator).length}}
               span(class="spectator-cnt") {{room.player_list.filter(x => x.spectator).length}}
                 i(class="fas fa-eye" v-show="room.player_list.filter(x => x.spectator).length > 0") 
-            span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open", v-bind:class="[(setting_window_open) ? 'blur':'']")
-          div#player-list(v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
+            span#player-list-toggle(class="fas fa-arrow-alt-circle-up", @click="player_list_open = !player_list_open")
+          div#player-list(v-bind:class="[(card_face_up) ? 'up':'down']")
             transition-group(name="flip-list")
               player(v-for="p in scoreboard" v-bind:name="p.name" 
                                              v-bind:vote_ended="room.vote_ended"
@@ -57,6 +57,7 @@ html
                                              v-bind:crown="p.is_owner" 
                                              v-bind:myself="player.id==p.id"
                                              v-bind:amispectator="player.spectator")
+
 
         div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
           div(class="flip-card-inner")
@@ -81,31 +82,34 @@ html
           div#cheat-btn(@click="cheat", class="btn") Spia!
 
         div#new-game(@click="game", v-show="player.is_owner && player_number > 2 && player_number < 9", class="btn") Nuova partita!
+
           
 
 
       div#setting-window(v-bind:class="[(setting_window_open) ? 'open':'close']")
         div#setting-list
-          div(class="setting" v-show="player_number > 2 && player_number < 9 && room.configurazioni[room.player_list.filter(x => x.role.detail!='' && !x.spectator).length].length > 1") Ruoli attivi:
+          div(class="setting" v-show="player_number < 9") Ruoli attivi per {{n}} giocatori:
             ul
-              li(class="role" :class="r" v-for="r in room.configurazioni[room.player_list.filter(x => x.role.detail!='' && !x.spectator).length]") {{ r }}
+              li(class="role" :class="r.r" v-for="r in uniqueNames") {{ r.r }} 
+                span(v-if="(r.q > 1)") ✖ {{ r.q }}
 
-          div(class="setting") Mitomane riconosce Assassini
-            label(class="switch")
-              input(type="checkbox", v-model="room.mitomane_riconosce_assassini")
-              span(class="slider")
+          //- div(class="setting") Mitomane riconosce Assassini
+          //-   label(class="switch")
+          //-     input(type="checkbox", v-model="room.mitomane_riconosce_assassini")
+          //-     span(class="slider")
 
-          div(class="setting") Testimoni si riconoscono
-            label(class="switch")
-              input(type="checkbox", v-model="room.testimoni_si_riconoscono")
-              span(class="slider")
+          //- div(class="setting") Testimoni si riconoscono
+          //-   label(class="switch")
+          //-     input(type="checkbox", v-model="room.testimoni_si_riconoscono")
+          //-     span(class="slider")
 
-          div(class="setting") Cittadini distinti
-            label(class="switch")
-              input(type="checkbox", v-model="room.cittadini_distinti")
-              span(class="slider")          
-
-        div#save-setting(@click="update_settings",class="btn") Salva impostazioni
+          //- div(class="setting") Cittadini distinti
+          //-   label(class="switch")
+          //-     input(type="checkbox", v-model="room.cittadini_distinti")
+          //-     span(class="slider")          
+        
+        //- div(class="bottom-controls")
+        //-   div#save-setting(@click="update_settings",class="btn") Salva
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js')
   script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
