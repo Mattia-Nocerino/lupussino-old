@@ -58,29 +58,31 @@ html
                                              v-bind:myself="player.id==p.id"
                                              v-bind:amispectator="player.spectator")
 
-        div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down']")
-          div#tappo-ruolo(v-bind:class="[(role_animation) ? 'rotate':'norotate']")
-            div#sfondo
-          transition(name="slide-fade", mode="out-in")
-            div#role-description-cnt(:key="role_animation")
-              div#role {{ player.role.name }}
-              div#detail {{ player.role.detail }}
 
-        div(class="bottom-controls")
-          div#votazione(v-show="room.game_started && !room.vote_ended && player.role.detail!=''", class="clearfix")
-            select(v-model="player.player_voted" v-bind:disabled="player.has_voted")
-              option(disabled selected value="") Votazione...
-              option Cielo
-              option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
-            div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
-              div#vote-detail {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='' && !x.spectator).length}}
-          div#cheat(v-show="room.game_started && player.name == 'Valentina8' && player.cheat_available", class="clearfix")
-            select(v-model="player.player_cheated")
-              option(disabled selected value="") Spia...
-              option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
-            div#cheat-btn(@click="cheat", class="btn") Spia!
+        div(class="flip-card" @click="card_face_up = !card_face_up" v-bind:class="[(card_face_up) ? 'up':'down', (setting_window_open) ? 'blur':'']")
+          div(class="flip-card-inner")
+            div(class="flip-card-front")
+              transition(name="slide-fade", mode="out-in")
+                div#role-description-cnt(:key="role_animation")
+                  div#role {{ player.role.name }}
+                  div#detail {{ player.role.detail }}
+            div(class="flip-card-back")
 
-          div#new-game(@click="game", v-show="player.is_owner && player_number >= 2 && player_number < 9", class="btn") Nuova partita!
+        div#votazione(v-show="room.game_started && !room.vote_ended && player.role.detail!=''" v-bind:class="[(setting_window_open) ? 'blur':'']")
+          select(v-model="player.player_voted" v-bind:disabled="player.has_voted")
+            option(disabled selected value="") Votazione...
+            option Cielo
+            option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
+          div#vote(@click="vote", class="btn" v-bind:class="(player.has_voted) ? 'annulla':''") {{vote_text}}
+          div#vote-detail Hanno votato {{room.player_list.filter(x => x.has_voted).length}}/{{room.player_list.filter(x => x.role.detail!='' && !x.spectator).length}}
+        div#cheat(v-show="room.game_started && player.name == 'Valentina9' && player.cheat_available")
+          select(v-model="player.player_cheated")
+            option(disabled selected value="") Seleziona un giocatore da spiare...
+            option(v-for="p in room.player_list.filter(x => x.name!=player.name && x.role.detail!='' && !x.spectator)" v-if="p.name!=player.name") {{p.name}}
+          div#cheat-btn(@click="cheat", class="btn") Spia!
+
+        div#new-game(@click="game", v-show="player.is_owner && player_number > 2 && player_number < 9", class="btn") Nuova partita!
+
           
 
 
