@@ -76,7 +76,7 @@ var vm = new Vue({
                 cheat_available: true,
                 player_cheated: ''
             }],
-            mitomane_riconosce_assassini: false,
+            mitomane_riconosce_assassini: true,
             testimoni_si_riconoscono: false,
             cittadini_distinti: false,
             configurazioni: [['']],
