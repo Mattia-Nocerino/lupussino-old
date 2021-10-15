@@ -252,7 +252,7 @@ label.fa-eye.on {
 .player-name-container {
   display: inline-block;
   border-radius: 50px;
-  width: 80px;
+  width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
