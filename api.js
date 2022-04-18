@@ -471,8 +471,8 @@ io.on('connection', function (socket) {
             ) {
               player.role.detail =
                 "Sei l'avvocato di " + t.name + '! Difendilo ad ogni costo!';
+break;
             }
-            break;
           }
           break;
         case 'Mitomane':
